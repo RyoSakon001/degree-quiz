@@ -24,7 +24,9 @@ class HomePage extends StatelessWidget {
                 SimpleButton(
                   text: 'スタート！',
                   borderColor: Colors.green,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/game');
+                  },
                 ),
                 SizedBox(height: 80),
                 SimpleButton(

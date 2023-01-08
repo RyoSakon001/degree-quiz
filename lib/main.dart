@@ -1,3 +1,4 @@
+import 'package:degree_quiz/game_page.dart';
 import 'package:degree_quiz/home_page.dart';
 import 'package:degree_quiz/tutorial_page.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/tutorial': (context) => TutorialPage(),
+        '/game': (context) => GamePage(),
       },
       initialRoute: "/",
       title: 'Flutter Overboard Demo',
