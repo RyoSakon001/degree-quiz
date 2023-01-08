@@ -1,3 +1,4 @@
+import 'package:degree_quiz/widget/simple_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,9 +10,35 @@ class HomePage extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial(context));
 
     return Scaffold(
-      appBar: AppBar(title: Text("ホーム")),
-      body: Center(
-        child: Text("スタート"),
+      body: SafeArea(
+        child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 64,
+              horizontal: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'mol計算ゲーム',
+                  style: TextStyle(fontSize: 40),
+                ),
+                SizedBox(height: 100),
+                SimpleButton(
+                  text: 'スタート！',
+                  borderColor: Colors.green,
+                  onPressed: () {},
+                ),
+                SizedBox(height: 100),
+                SimpleButton(
+                  text: 'チュートリアル',
+                  borderColor: Colors.orange,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/tutorial');
+                  },
+                ),
+              ],
+            )),
       ),
     );
   }
