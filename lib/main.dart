@@ -1,3 +1,4 @@
+import 'package:degree_quiz/home.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_overboard/flutter_overboard.dart';
@@ -44,16 +45,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         pages: pages,
         showBullets: true,
         inactiveBulletColor: Colors.blue,
-        // backgroundProvider: NetworkImage('https://picsum.photos/720/1280'),
         skipCallback: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Skip clicked"),
-          ));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: ((context) => const HomePage()),
+            ),
+          );
         },
         finishCallback: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Finish clicked"),
-          ));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: ((context) => const HomePage()),
+            ),
+          );
         },
       ),
     );
@@ -80,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         doAnimateImage: true),
     PageModel.withChild(
         child: Padding(
-          padding: EdgeInsets.only(bottom: 25.0),
+          padding: const EdgeInsets.only(bottom: 25.0),
           child: Image.asset('assets/images/image04.jpeg',
               width: 300.0, height: 300.0),
         ),
