@@ -4,7 +4,7 @@ import 'package:flutter_overboard/flutter_overboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TutorialPage extends StatefulWidget {
-  TutorialPage({Key? key}) : super(key: key);
+  const TutorialPage({Key? key}) : super(key: key);
 
   @override
   _TutorialPageState createState() => _TutorialPageState();
@@ -12,7 +12,7 @@ class TutorialPage extends StatefulWidget {
 
 class _TutorialPageState extends State<TutorialPage>
     with TickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
