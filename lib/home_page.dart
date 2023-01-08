@@ -12,10 +12,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 64,
-              horizontal: 16,
-            ),
+            padding: EdgeInsets.fromLTRB(16, 64, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -23,19 +20,28 @@ class HomePage extends StatelessWidget {
                   'mol計算ゲーム',
                   style: TextStyle(fontSize: 40),
                 ),
-                SizedBox(height: 100),
+                SizedBox(height: 80),
                 SimpleButton(
                   text: 'スタート！',
                   borderColor: Colors.green,
                   onPressed: () {},
                 ),
-                SizedBox(height: 100),
+                SizedBox(height: 80),
                 SimpleButton(
                   text: 'チュートリアル',
                   borderColor: Colors.orange,
                   onPressed: () {
                     Navigator.pushNamed(context, '/tutorial');
                   },
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: 250,
+                  height: 250,
+                  child: Image(
+                    image: AssetImage('assets/images/frasco.png'),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ],
             )),
