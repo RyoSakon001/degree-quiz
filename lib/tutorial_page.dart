@@ -30,15 +30,11 @@ class _TutorialPageState extends State<TutorialPage>
         inactiveBulletColor: Colors.blue,
         skipCallback: () {
           _setTutorialDone();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: ((context) => const HomePage()),
-          ));
+          Navigator.pushNamed(context, '/');
         },
         finishCallback: () {
           _setTutorialDone();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: ((context) => const HomePage()),
-          ));
+          Navigator.pushNamed(context, '/');
         },
       ),
     );
