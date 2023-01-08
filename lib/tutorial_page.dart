@@ -1,6 +1,7 @@
 import 'package:degree_quiz/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _TutorialPageState extends State<TutorialPage>
         showBullets: true,
         inactiveBulletColor: Colors.blue,
         skipCallback: () {
+          _setTutorialDone();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: ((context) => const HomePage()),
@@ -35,6 +37,7 @@ class _TutorialPageState extends State<TutorialPage>
           );
         },
         finishCallback: () {
+          _setTutorialDone();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: ((context) => const HomePage()),
@@ -73,4 +76,9 @@ class _TutorialPageState extends State<TutorialPage>
         color: const Color(0xFF5886d6),
         doAnimateChild: true)
   ];
+}
+
+void _setTutorialDone() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('isFirst', true);
 }
