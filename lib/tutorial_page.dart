@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
 
 class TutorialPage extends StatefulWidget {
-  TutorialPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  TutorialPage({Key? key}) : super(key: key);
 
   @override
   _TutorialPageState createState() => _TutorialPageState();
