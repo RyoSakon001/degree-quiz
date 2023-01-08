@@ -1,4 +1,4 @@
-import 'package:degree_quiz/home.dart';
+import 'package:degree_quiz/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
 
