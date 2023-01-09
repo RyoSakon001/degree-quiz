@@ -37,6 +37,8 @@ dependencies:
   flutter_launcher_icons: ^0.11.0
   flutter_overboard: ^3.1.1
   shared_preferences: ^2.0.15
+  cloud_firestore: ^4.3.1
+  firebase_core: ^2.4.1
 
 dev_dependencies:
   flutter_test:
