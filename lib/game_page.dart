@@ -50,6 +50,12 @@ class _GamePageState extends State<GamePage> {
                     '$_counter',
                     style: Theme.of(context).textTheme.headline4,
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/data');
+                    },
+                    child: Text('Firestoreのページへ'),
+                  ),
                 ],
               ),
             ),
