@@ -23,9 +23,10 @@ class SubstanceView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Counter')),
       body: Center(
-        child: BlocBuilder<SubstanceBloc, int>(
-          builder: (context, count) {
-            return Text('$count', style: Theme.of(context).textTheme.headline1);
+        child: BlocBuilder<SubstanceBloc, String>(
+          builder: (context, formulaName) {
+            return Text(formulaName,
+                style: Theme.of(context).textTheme.headline1);
           },
         ),
       ),
