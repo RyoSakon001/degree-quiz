@@ -1,5 +1,5 @@
-import 'package:degree_quiz/bloc/counter_bloc.dart';
-import 'package:degree_quiz/bloc/counter_event.dart';
+import 'package:degree_quiz/bloc/counter/counter_bloc.dart';
+import 'package:degree_quiz/bloc/counter/counter_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
