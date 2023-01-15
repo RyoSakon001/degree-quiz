@@ -56,6 +56,12 @@ class _GamePageState extends State<GamePage> {
                     },
                     child: Text('Firestoreのページへ'),
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/counter');
+                    },
+                    child: Text('Blocのページへ'),
+                  ),
                 ],
               ),
             ),
