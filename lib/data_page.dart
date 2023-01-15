@@ -35,8 +35,7 @@ class _DataPageState extends State<DataPage> {
                 child: StreamBuilder<QuerySnapshot>(
                   //2
                   stream: FirebaseFirestore.instance
-                      .collection('dream')
-                      .orderBy('createdAt')
+                      .collection('substances')
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -50,7 +49,7 @@ class _DataPageState extends State<DataPage> {
                         .map<String>((DocumentSnapshot document) {
                       final documentData =
                           document.data()! as Map<String, dynamic>;
-                      return documentData['content']! as String;
+                      return documentData['formula']! as String;
                     }).toList();
 
                     final reverseList = list.reversed.toList();
