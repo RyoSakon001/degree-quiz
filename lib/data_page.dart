@@ -8,7 +8,12 @@ class DataPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Text('data'),
+          child: ElevatedButton(
+            onPressed: () {
+              print('aaa');
+            },
+            child: Text('data'),
+          ),
         ),
       ),
     );
