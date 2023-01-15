@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:275598721332:android:31f88acc352d119fe2a561',
     messagingSenderId: '275598721332',
     projectId: 'degree-quiz',
+    databaseURL: 'https://degree-quiz-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'degree-quiz.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:275598721332:ios:6deec1d208ab4443e2a561',
     messagingSenderId: '275598721332',
     projectId: 'degree-quiz',
+    databaseURL: 'https://degree-quiz-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'degree-quiz.appspot.com',
     iosClientId: '275598721332-vajopv8arnibcbvb0slgaln9j73u3bua.apps.googleusercontent.com',
     iosBundleId: 'com.example.degreeQuiz',
