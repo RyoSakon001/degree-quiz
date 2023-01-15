@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:degree_quiz/firestore.dart';
+import 'package:degree_quiz/firestore_provider.dart';
 import 'package:flutter/material.dart';
 
 class DataPage extends StatefulWidget {
