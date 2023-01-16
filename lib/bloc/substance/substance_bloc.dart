@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:degree_quiz/bloc/substance/substance_event.dart';
-import 'package:degree_quiz/model/Substance.dart';
+import 'package:degree_quiz/model/substance.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SubstanceBloc extends Bloc<SubstanceEvent, Substance> {
