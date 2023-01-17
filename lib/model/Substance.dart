@@ -9,7 +9,7 @@ class Substance {
   });
   final int id;
   final String formula;
-  final int amount;
+  final num amount;
   final String commonName;
   final String? airName;
   final String? liquidName;

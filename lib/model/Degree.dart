@@ -8,5 +8,5 @@ class Degree {
   final int type;
   final String name;
   final String degree;
-  final int baseValue;
+  final num baseValue;
 }
