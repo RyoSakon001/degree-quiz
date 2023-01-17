@@ -1,15 +1,19 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreProvider {
   // Collection名
-  static const substance = 'substances';
-  static const degree = 'degrees';
+  static const substances = 'substances';
+  static const degrees = 'degrees';
+  static const substanceListLength = 2;
+  static const degreeListLength = 4;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> substanceStream() =>
-      _firestore.collection(substance).snapshots();
+      _firestore.collection(substances).snapshots();
 
   Widget substanceListBuilder(
       BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
@@ -40,19 +44,22 @@ class FirestoreProvider {
 
   Future<Map<String, dynamic>> getSubstance() async {
     final substanceSnapshot = await FirebaseFirestore.instance
-        .collection(substance)
-        .doc('CO[2]')
+        .collection(substances)
+        .where('id', isEqualTo: Random().nextInt(substanceListLength) + 1)
         .get();
-    return (substanceSnapshot.exists && substanceSnapshot.data() != null)
-        ? substanceSnapshot.data()!
-        : {};
+
+    final substanceData = substanceSnapshot.docs.first;
+
+    return (substanceData.exists) ? substanceData.data() : {};
   }
 
   Future<Map<String, dynamic>> getDegree() async {
-    final degreeSnapshot =
-        await FirebaseFirestore.instance.collection(degree).doc('0').get();
-    return (degreeSnapshot.exists && degreeSnapshot.data() != null)
-        ? degreeSnapshot.data()!
-        : {};
+    final degreeSnapshot = await FirebaseFirestore.instance
+        .collection(degrees)
+        .where('type', isEqualTo: Random().nextInt(degreeListLength))
+        .get();
+    final degreeData = degreeSnapshot.docs.first;
+
+    return (degreeData.exists) ? degreeData.data() : {};
   }
 }
