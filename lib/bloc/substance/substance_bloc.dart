@@ -12,7 +12,7 @@ class SubstanceBloc extends Bloc<SubstanceEvent, Substance> {
           commonName: '',
         )) {
     on<SubstanceIncrementPressed>((_, emit) async {
-      final substanceData = await FirestoreProvider().getSubstance();
+      final substanceData = await FirestoreProvider().getRandomSubstance();
 
       emit(Substance(
         id: substanceData['id'],
