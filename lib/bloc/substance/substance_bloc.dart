@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:degree_quiz/bloc/substance/substance_event.dart';
+import 'package:degree_quiz/firestore_provider.dart';
 import 'package:degree_quiz/model/substance.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,21 +12,14 @@ class SubstanceBloc extends Bloc<SubstanceEvent, Substance> {
           commonName: '',
         )) {
     on<SubstanceIncrementPressed>((_, emit) async {
-      final substanceSnapshot = await FirebaseFirestore.instance
-          .collection('substances')
-          .doc('CO[2]')
-          .get();
-      final substanceData =
-          substanceSnapshot.exists ? substanceSnapshot.data() : null;
+      final substanceData = await FirestoreProvider().getSubstance();
 
-      if (substanceData != null) {
-        emit(Substance(
-          id: substanceData['id'],
-          formula: substanceData['formula'],
-          amount: substanceData['amount'],
-          commonName: substanceData['name_common'],
-        ));
-      }
+      emit(Substance(
+        id: substanceData['id'],
+        formula: substanceData['formula'],
+        amount: substanceData['amount'],
+        commonName: substanceData['name_common'],
+      ));
     });
   }
 }

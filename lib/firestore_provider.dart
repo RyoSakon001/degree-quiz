@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class FirestoreProvider {
   // Collection名
   static const substance = 'substances';
+  static const degree = 'degrees';
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -37,11 +38,21 @@ class FirestoreProvider {
     );
   }
 
-  void getSubstance() async {
-    await _firestore.collection(substance).get().then((event) {
-      for (var doc in event.docs) {
-        print("${doc.id} => ${doc.data()}");
-      }
-    });
+  Future<Map<String, dynamic>> getSubstance() async {
+    final substanceSnapshot = await FirebaseFirestore.instance
+        .collection(substance)
+        .doc('CO[2]')
+        .get();
+    return (substanceSnapshot.exists && substanceSnapshot.data() != null)
+        ? substanceSnapshot.data()!
+        : {};
+  }
+
+  Future<Map<String, dynamic>> getDegree() async {
+    final degreeSnapshot =
+        await FirebaseFirestore.instance.collection(degree).doc('0').get();
+    return (degreeSnapshot.exists && degreeSnapshot.data() != null)
+        ? degreeSnapshot.data()!
+        : {};
   }
 }

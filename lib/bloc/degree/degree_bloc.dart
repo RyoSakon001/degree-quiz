@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:degree_quiz/bloc/degree/degree_event.dart';
+import 'package:degree_quiz/firestore_provider.dart';
 import 'package:degree_quiz/model/degree.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,18 +12,14 @@ class DegreeBloc extends Bloc<DegreeEvent, Degree> {
           baseValue: 1,
         )) {
     on<DegreeIncrementPressed>((_, emit) async {
-      final degreeSnapshot =
-          await FirebaseFirestore.instance.collection('degrees').doc('1').get();
-      final degreeData = degreeSnapshot.exists ? degreeSnapshot.data() : null;
+      final degreeData = await FirestoreProvider().getDegree();
 
-      if (degreeData != null) {
-        emit(Degree(
-          type: degreeData['type'],
-          name: degreeData['name'],
-          degree: degreeData['degree'],
-          baseValue: degreeData['baseValue'],
-        ));
-      }
+      emit(Degree(
+        type: degreeData['type'],
+        name: degreeData['name'],
+        degree: degreeData['degree'],
+        baseValue: degreeData['baseValue'],
+      ));
     });
   }
 }
