@@ -28,53 +28,61 @@ class DataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Counter')),
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/');
-                  },
-                  child: Text('戻る'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/');
+                      },
+                      child: Text('戻る'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _showTerms(context),
+                      child: Text('条件'),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () => _showTerms(context),
-                  child: Text('条件'),
+                BlocBuilder<SubstanceBloc, Substance>(
+                  builder: (context, substance) => Text(substance.formula,
+                      style: Theme.of(context).textTheme.headline1),
+                ),
+                BlocBuilder<DegreeBloc, Degree>(
+                  builder: (context, degree) => Text(degree.name,
+                      style: Theme.of(context).textTheme.headline1),
+                ),
+                SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<SubstanceBloc>()
+                            .add(SubstanceIncrementPressed());
+                      },
+                      child: Text('化学式'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<DegreeBloc>()
+                            .add(DegreeIncrementPressed());
+                      },
+                      child: Text('単位'),
+                    ),
+                  ],
                 ),
               ],
             ),
-            BlocBuilder<SubstanceBloc, Substance>(
-              builder: (context, substance) => Text(substance.formula,
-                  style: Theme.of(context).textTheme.headline1),
-            ),
-            BlocBuilder<DegreeBloc, Degree>(
-              builder: (context, degree) => Text(degree.name,
-                  style: Theme.of(context).textTheme.headline1),
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              context.read<SubstanceBloc>().add(SubstanceIncrementPressed());
-            },
-          ),
-          FloatingActionButton(
-            child: const Icon(Icons.remove),
-            onPressed: () {
-              context.read<DegreeBloc>().add(DegreeIncrementPressed());
-            },
-          ),
-        ],
       ),
     );
   }
