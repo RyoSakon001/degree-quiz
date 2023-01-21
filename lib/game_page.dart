@@ -65,10 +65,6 @@ class DataView extends StatelessWidget {
                 SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () {
-                    // context
-                    //     .read<SubstanceBloc>()
-                    //     .add(SubstanceIncrementPressed());
-                    // context.read<DegreeBloc>().add(DegreeIncrementPressed());
                     context
                         .read<QuestionBloc>()
                         .add(QuestionIncrementPressed());
