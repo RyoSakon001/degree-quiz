@@ -1,10 +1,9 @@
 import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
-import 'package:degree_quiz/bloc/degree/degree_event.dart';
-import 'package:degree_quiz/bloc/sentence/sentence_bloc.dart';
-import 'package:degree_quiz/bloc/sentence/sentence_event.dart';
+import 'package:degree_quiz/bloc/question/question_bloc.dart';
+import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
-import 'package:degree_quiz/bloc/substance/substance_event.dart';
 import 'package:degree_quiz/model/degree.dart';
+import 'package:degree_quiz/model/question.dart';
 import 'package:degree_quiz/model/substance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +17,7 @@ class GamePage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => SubstanceBloc()),
         BlocProvider(create: (_) => DegreeBloc()),
-        BlocProvider(create: (_) => SentenceBloc()),
+        BlocProvider(create: (_) => QuestionBloc()),
       ],
       child: const DataView(),
     );
@@ -60,8 +59,8 @@ class DataView extends StatelessWidget {
                   builder: (context, degree) => Text(degree.name,
                       style: Theme.of(context).textTheme.headline1),
                 ),
-                BlocBuilder<SentenceBloc, String>(
-                  builder: (context, sentence) => Text(sentence),
+                BlocBuilder<QuestionBloc, Question>(
+                  builder: (context, question) => Text(question.sentence),
                 ),
                 SizedBox(height: 32),
                 ElevatedButton(
@@ -71,8 +70,8 @@ class DataView extends StatelessWidget {
                     //     .add(SubstanceIncrementPressed());
                     // context.read<DegreeBloc>().add(DegreeIncrementPressed());
                     context
-                        .read<SentenceBloc>()
-                        .add(SentenceIncrementPressed());
+                        .read<QuestionBloc>()
+                        .add(QuestionIncrementPressed());
                   },
                   child: Text('問題を出す'),
                 ),
