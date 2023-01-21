@@ -58,26 +58,14 @@ class DataView extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline1),
                 ),
                 SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<SubstanceBloc>()
-                            .add(SubstanceIncrementPressed());
-                      },
-                      child: Text('化学式'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<DegreeBloc>()
-                            .add(DegreeIncrementPressed());
-                      },
-                      child: Text('単位'),
-                    ),
-                  ],
+                ElevatedButton(
+                  onPressed: () {
+                    context
+                        .read<SubstanceBloc>()
+                        .add(SubstanceIncrementPressed());
+                    context.read<DegreeBloc>().add(DegreeIncrementPressed());
+                  },
+                  child: Text('問題を出す'),
                 ),
               ],
             ),
