@@ -1,5 +1,7 @@
 import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/degree/degree_event.dart';
+import 'package:degree_quiz/bloc/sentence/sentence_bloc.dart';
+import 'package:degree_quiz/bloc/sentence/sentence_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
 import 'package:degree_quiz/bloc/substance/substance_event.dart';
 import 'package:degree_quiz/model/degree.dart';
@@ -16,6 +18,7 @@ class GamePage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => SubstanceBloc()),
         BlocProvider(create: (_) => DegreeBloc()),
+        BlocProvider(create: (_) => SentenceBloc()),
       ],
       child: const DataView(),
     );
@@ -57,13 +60,19 @@ class DataView extends StatelessWidget {
                   builder: (context, degree) => Text(degree.name,
                       style: Theme.of(context).textTheme.headline1),
                 ),
+                BlocBuilder<SentenceBloc, String>(
+                  builder: (context, sentence) => Text(sentence),
+                ),
                 SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () {
+                    // context
+                    //     .read<SubstanceBloc>()
+                    //     .add(SubstanceIncrementPressed());
+                    // context.read<DegreeBloc>().add(DegreeIncrementPressed());
                     context
-                        .read<SubstanceBloc>()
-                        .add(SubstanceIncrementPressed());
-                    context.read<DegreeBloc>().add(DegreeIncrementPressed());
+                        .read<SentenceBloc>()
+                        .add(SentenceIncrementPressed());
                   },
                   child: Text('問題を出す'),
                 ),
