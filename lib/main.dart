@@ -1,4 +1,3 @@
-import 'package:degree_quiz/data_page.dart';
 import 'package:degree_quiz/game_page.dart';
 import 'package:degree_quiz/home_page.dart';
 import 'package:degree_quiz/tutorial_page.dart';
@@ -26,7 +25,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomePage(),
         '/tutorial': (context) => TutorialPage(),
         '/game': (context) => GamePage(),
-        '/data': (context) => DataPage(),
       },
       initialRoute: "/",
       title: 'Flutter Overboard Demo',
