@@ -33,46 +33,36 @@ class DataView extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/');
-                      },
-                      child: Text('戻る'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => _showTerms(context),
-                      child: Text('条件'),
-                    ),
-                  ],
-                ),
-                BlocBuilder<SubstanceBloc, Substance>(
-                  builder: (context, substance) => Text(substance.formula,
-                      style: Theme.of(context).textTheme.headline1),
-                ),
-                BlocBuilder<DegreeBloc, Degree>(
-                  builder: (context, degree) => Text(degree.name,
-                      style: Theme.of(context).textTheme.headline1),
-                ),
-                BlocBuilder<QuestionBloc, Question>(
-                  builder: (context, question) => Text(question.sentence),
-                ),
-                SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<QuestionBloc>()
-                        .add(QuestionIncrementPressed());
-                  },
-                  child: Text('問題を出す'),
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: Text('戻る'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showTerms(context),
+                    child: Text('条件'),
+                  ),
+                ],
+              ),
+              BlocBuilder<QuestionBloc, Question>(
+                builder: (context, question) => Text(question.sentence),
+              ),
+              SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<QuestionBloc>().add(QuestionIncrementPressed());
+                },
+                child: Text('問題を出す'),
+              ),
+              SizedBox(height: 32),
+              Keyboard(),
+            ],
           ),
         ),
       ),
@@ -109,6 +99,47 @@ class DataView extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class Keyboard extends StatelessWidget {
+  const Keyboard({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: 4,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        children: [
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          '0',
+          'C',
+          'Enter',
+          'mol',
+          '個',
+          'g',
+          'L',
+        ].asMap().entries.map((entry) {
+          return ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              primary: (entry.key <= 11) ? Colors.blue : Colors.green,
+            ),
+            child: Text(entry.value),
+          );
+        }).toList(),
+      ),
     );
   }
 }
