@@ -15,7 +15,13 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
               commonName: '',
             ),
             givenRate: 1,
-            degree: Degree(
+            givenDegree: Degree(
+              type: 0,
+              name: '',
+              degree: '',
+              baseValue: 1,
+            ),
+            desiredDegree: Degree(
               type: 0,
               name: '',
               degree: '',
@@ -24,7 +30,13 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
             answer: 1)) {
     on<QuestionIncrementPressed>((_, emit) async {
       final substanceData = await FirestoreProvider().getRandomSubstance();
-      final degreeData = await FirestoreProvider().getRandomDegree();
+      // final degreeNumList = useState([0, 0]);
+      // while (degreeNumList.value[0] == degreeNumList.value[1]) {
+      //   degreeNumList.value[0] == Random().nextInt(4);
+      //   degreeNumList.value[1] == Random().nextInt(4);
+      // }
+      final givenDegreeData = await FirestoreProvider().getRandomDegree(0);
+      final desiredDegreeData = await FirestoreProvider().getRandomDegree(1);
 
       emit(Question(
         givenRate: 1,
@@ -34,11 +46,17 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
           amount: substanceData['amount'],
           commonName: substanceData['commonName'],
         ),
-        degree: Degree(
-          type: degreeData['type'],
-          name: degreeData['name'],
-          degree: degreeData['degree'],
-          baseValue: degreeData['baseValue'],
+        givenDegree: Degree(
+          type: givenDegreeData['type'],
+          name: givenDegreeData['name'],
+          degree: givenDegreeData['degree'],
+          baseValue: givenDegreeData['baseValue'],
+        ),
+        desiredDegree: Degree(
+          type: desiredDegreeData['type'],
+          name: desiredDegreeData['name'],
+          degree: desiredDegreeData['degree'],
+          baseValue: desiredDegreeData['baseValue'],
         ),
         answer: 1,
       ));

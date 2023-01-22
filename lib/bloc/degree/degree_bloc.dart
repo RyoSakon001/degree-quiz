@@ -12,7 +12,7 @@ class DegreeBloc extends Bloc<DegreeEvent, Degree> {
           baseValue: 1,
         )) {
     on<DegreeIncrementPressed>((_, emit) async {
-      final degreeData = await FirestoreProvider().getRandomDegree();
+      final degreeData = await FirestoreProvider().getRandomDegree(1);
 
       emit(Degree(
         type: degreeData['type'],

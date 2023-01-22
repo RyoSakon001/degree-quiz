@@ -5,16 +5,18 @@ class Question {
   Question({
     required this.givenRate,
     required this.substance,
-    required this.degree,
+    required this.givenDegree,
+    required this.desiredDegree,
     required this.answer,
   });
   final int givenRate;
   final Substance substance;
-  final Degree degree;
+  final Degree givenDegree;
+  final Degree desiredDegree;
   final num answer;
 }
 
 extension QuestionExtention on Question {
   String get sentence =>
-      '${(degree.baseValue * 2).toStringAsFixed(2) + degree.degree}の${substance.commonName + substance.formula}の${degree.name}を求めよ。';
+      '${(givenDegree.baseValue * 2).toStringAsFixed(2) + givenDegree.degree}の${substance.commonName + substance.formula}の${desiredDegree.name}を求めよ。';
 }

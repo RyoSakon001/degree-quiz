@@ -8,7 +8,6 @@ class FirestoreProvider {
   static const substances = 'substances';
   static const degrees = 'degrees';
   static const substanceListLength = 2;
-  static const degreeListLength = 4;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -53,10 +52,10 @@ class FirestoreProvider {
     return (substanceData.exists) ? substanceData.data() : {};
   }
 
-  Future<Map<String, dynamic>> getRandomDegree() async {
+  Future<Map<String, dynamic>> getRandomDegree(int type) async {
     final degreeSnapshot = await FirebaseFirestore.instance
         .collection(degrees)
-        .where('type', isEqualTo: Random().nextInt(degreeListLength))
+        .where('type', isEqualTo: type)
         .get();
     final degreeData = degreeSnapshot.docs.first;
 
