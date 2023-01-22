@@ -2,11 +2,10 @@ import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
-import 'package:degree_quiz/model/degree.dart';
 import 'package:degree_quiz/model/question.dart';
-import 'package:degree_quiz/model/substance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -24,11 +23,14 @@ class GamePage extends StatelessWidget {
   }
 }
 
-class DataView extends StatelessWidget {
+class DataView extends HookWidget {
   const DataView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final questionNumberState = useState(1);
+    final scoreState = useState(0);
+    final isResult = useState(false);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,6 +52,31 @@ class DataView extends StatelessWidget {
                   ),
                 ],
               ),
+              (isResult.value)
+                  ? Column(
+                      children: [
+                        Text('終了！'),
+                        Text('最終スコア：${scoreState.value}'),
+                        SizedBox(
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              isResult.value = false;
+                              questionNumberState.value = 1;
+                              scoreState.value = 0;
+                            },
+                            child: Text('再チャレンジ'),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Text('${questionNumberState.value}問目'),
+                        Text('得点：${scoreState.value}/100'),
+                        SizedBox(height: 48),
+                      ],
+                    ),
               BlocBuilder<QuestionBloc, Question>(
                 builder: (context, question) => Text(question.sentence),
               ),
@@ -61,7 +88,53 @@ class DataView extends StatelessWidget {
                 child: Text('問題を出す'),
               ),
               SizedBox(height: 32),
-              Keyboard(),
+              BlocBuilder<QuestionBloc, Question>(
+                builder: (context, question) => Expanded(
+                  child: GridView.count(
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    children: [
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                      '6',
+                      '7',
+                      '8',
+                      '9',
+                      '0',
+                      'C',
+                      'Enter',
+                      'mol',
+                      '個',
+                      'g',
+                      'L',
+                    ].asMap().entries.map((entry) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (questionNumberState.value > 10) {
+                            return;
+                          } else if (questionNumberState.value == 10) {
+                            questionNumberState.value++;
+                            isResult.value = true;
+                          } else {
+                            questionNumberState.value++;
+                          }
+                          if (question.answer == 1) scoreState.value += 10;
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary:
+                              (entry.key <= 11) ? Colors.blue : Colors.green,
+                        ),
+                        child: Text(entry.value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
