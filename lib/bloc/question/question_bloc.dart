@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/firestore_provider.dart';
 import 'package:degree_quiz/model/Degree.dart';
@@ -30,13 +32,12 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
             answer: 1)) {
     on<QuestionIncrementPressed>((_, emit) async {
       final substanceData = await FirestoreProvider().getRandomSubstance();
-      // final degreeNumList = useState([0, 0]);
-      // while (degreeNumList.value[0] == degreeNumList.value[1]) {
-      //   degreeNumList.value[0] == Random().nextInt(4);
-      //   degreeNumList.value[1] == Random().nextInt(4);
-      // }
-      final givenDegreeData = await FirestoreProvider().getRandomDegree(0);
-      final desiredDegreeData = await FirestoreProvider().getRandomDegree(1);
+
+      final degreeTypeList = _getTwoDifferentNumber();
+      final givenDegreeData =
+          await FirestoreProvider().getRandomDegree(degreeTypeList[0]);
+      final desiredDegreeData =
+          await FirestoreProvider().getRandomDegree(degreeTypeList[1]);
 
       emit(Question(
         givenRate: 1,
@@ -61,5 +62,13 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
         answer: 1,
       ));
     });
+  }
+}
+
+List<int> _getTwoDifferentNumber() {
+  while (true) {
+    final int num1 = Random().nextInt(4);
+    final int num2 = Random().nextInt(4);
+    if (num1 != num2) return [num1, num2];
   }
 }
