@@ -1,5 +1,6 @@
 import 'package:degree_quiz/model/Degree.dart';
 import 'package:degree_quiz/model/Substance.dart';
+import 'package:degree_quiz/string_extension.dart';
 
 class Question {
   Question({
@@ -19,8 +20,8 @@ class Question {
 extension QuestionExtention on Question {
   String get sentence {
     String val = '';
-    val += _getAmount();
-    val += (givenDegree.type == 3) ? ' × 10^23' : '';
+
+    val += _getAmountStr();
     val += givenDegree.degree;
     val += 'の';
     val += substance.commonName;
@@ -31,27 +32,35 @@ extension QuestionExtention on Question {
     return val;
   }
 
-  String _getAmount() {
-    num baseValue = (givenDegree.type == 1) // 1:質量
+  String _getAmountStr() {
+    num amount = (givenDegree.type == 1) // g
         ? substance.amount
         : givenDegree.baseValue;
-    baseValue *= givenRate;
+    amount *= givenRate;
+
+    String val = '';
     switch (givenDegree.type) {
       case 0: // mol
-        // TODO: 処理
+        if (amount >= 10) val = amount.round().toString();
+        val = amount.toString();
         break;
       case 1: // g
-        // TODO: 処理
+        // FIXME: モル質量が小数を含むパターンに対応できていないので直す
+        if (amount >= 10) {
+          val = amount.round().toString();
+        } else {
+          val = amount.toString();
+        }
         break;
       case 2: // L
-        // TODO: 処理
+        val = amount.toStringAsFixed(6).cutZero;
         break;
       case 3: // 個
-        // TODO: 処理
+        val = amount.toStringAsExponential(1).avogadroDegree;
         break;
       default:
     }
 
-    return baseValue.toStringAsFixed(2);
+    return val;
   }
 }
