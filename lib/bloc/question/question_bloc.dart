@@ -40,7 +40,7 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
           await FirestoreProvider().getRandomDegree(degreeTypeList[1]);
 
       emit(Question(
-        givenRate: 1,
+        givenRate: _getRate(),
         substance: Substance(
           id: substanceData['id'],
           formula: substanceData['formula'],
@@ -71,4 +71,9 @@ List<int> _getTwoDifferentNumber() {
     final int num2 = Random().nextInt(4);
     if (num1 != num2) return [num1, num2];
   }
+}
+
+double _getRate() {
+  final List<double> rateList = [0.01, 0.1, 0.2, 0.5, 1.5, 2, 5, 10];
+  return rateList[Random().nextInt(rateList.length)];
 }
