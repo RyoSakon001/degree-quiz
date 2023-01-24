@@ -28,6 +28,7 @@ class DataView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<QuestionBloc>().add(QuestionIncrementPressed());
     final questionNumberState = useState(1);
     final scoreState = useState(0);
     final isResult = useState(false);
