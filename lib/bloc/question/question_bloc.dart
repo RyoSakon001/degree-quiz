@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/firestore_provider.dart';
-import 'package:degree_quiz/model/Degree.dart';
-import 'package:degree_quiz/model/Substance.dart';
+import 'package:degree_quiz/model/degree.dart';
+import 'package:degree_quiz/model/substance.dart';
 import 'package:degree_quiz/model/question.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

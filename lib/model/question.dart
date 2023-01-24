@@ -1,5 +1,5 @@
-import 'package:degree_quiz/model/Degree.dart';
-import 'package:degree_quiz/model/Substance.dart';
+import 'package:degree_quiz/model/degree.dart';
+import 'package:degree_quiz/model/substance.dart';
 import 'package:degree_quiz/string_extension.dart';
 
 class Question {
