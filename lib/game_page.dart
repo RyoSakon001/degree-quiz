@@ -37,7 +37,9 @@ class GameView extends HookWidget {
     final scoreState = useState(0);
     final isResult = useState(false);
     final isCorrect = useState(false);
-    final answerText = useState('');
+    final answerNumber = useState('');
+    final answerDegree = useState('');
+    final answerType = useState(-1);
 
     return Scaffold(
       body: SafeArea(
@@ -92,7 +94,7 @@ class GameView extends HookWidget {
               ),
               SizedBox(height: 32),
               Text(
-                answerText.value,
+                answerNumber.value + answerDegree.value,
                 style: TextStyle(
                     color: Colors.blueAccent,
                     fontSize: 30.0,
@@ -118,19 +120,20 @@ class GameView extends HookWidget {
                       '9',
                       '.',
                       '0',
-                      'C',
-                      'mol',
-                      '個',
                       ' × 10^',
+                      'mol',
                       'g',
                       'L',
+                      '個',
+                      'C',
                       'Enter',
                     ].asMap().entries.map((entry) {
                       return ElevatedButton(
                         onPressed: () {
                           switch (entry.key) {
-                            case 11: // clear
-                              answerText.value = '';
+                            case 16: // clear
+                              answerNumber.value = '';
+                              answerDegree.value = '';
                               break;
                             case 17: // Enter
                               // 出題数集計
@@ -142,22 +145,34 @@ class GameView extends HookWidget {
                               } else {
                                 questionNumberState.value++;
                               }
+
                               // 答え合わせ
-                              isCorrect.value =
-                                  (question.answer == answerText.value);
-                              if (question.answer == answerText.value) {
-                                scoreState.value += 10;
+                              // 単位が合っているか判定
+                              if (answerType.value ==
+                                  question.desiredDegree.type) {
+                                // 数値が合っているか判定
+                                if (true) {
+                                  scoreState.value += 10;
+                                }
                               }
                               // テキストクリア
-                              answerText.value = '';
+                              answerNumber.value = '';
+                              answerDegree.value = '';
                               // 次の問題を出す
                               context
                                   .read<QuestionBloc>()
                                   .add(QuestionChanged());
 
                               break;
+                            case 12: // mol
+                            case 13: // g
+                            case 14: // L
+                            case 15: // 個
+                              answerDegree.value = entry.value;
+                              answerType.value = entry.key - 12; // 0,1,2,3
+                              break;
                             default:
-                              answerText.value += entry.value;
+                              answerNumber.value += entry.value;
                               break;
                           }
                         },
