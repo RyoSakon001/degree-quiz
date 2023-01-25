@@ -14,7 +14,7 @@ class Question {
   final Substance substance;
   final Degree givenDegree;
   final Degree desiredDegree;
-  final num answer;
+  final String answer;
 }
 
 extension QuestionExtention on Question {

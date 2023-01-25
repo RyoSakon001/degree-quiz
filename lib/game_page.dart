@@ -32,6 +32,9 @@ class DataView extends HookWidget {
     final questionNumberState = useState(1);
     final scoreState = useState(0);
     final isResult = useState(false);
+    final isCorrect = useState(false);
+    final answerText = useState('');
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -47,6 +50,8 @@ class DataView extends HookWidget {
                     },
                     child: Text('戻る'),
                   ),
+                  if (questionNumberState.value != 1)
+                    Text(isCorrect.value ? '正解！' : '不正解！'),
                   ElevatedButton(
                     onPressed: () => _showTerms(context),
                     child: Text('条件'),
@@ -81,12 +86,20 @@ class DataView extends HookWidget {
               BlocBuilder<QuestionBloc, Question>(
                 builder: (context, question) => Text(question.sentence),
               ),
+              // SizedBox(height: 32),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     context.read<QuestionBloc>().add(QuestionIncrementPressed());
+              //   },
+              //   child: Text('問題を出す'),
+              // ),
               SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<QuestionBloc>().add(QuestionIncrementPressed());
-                },
-                child: Text('問題を出す'),
+              Text(
+                answerText.value,
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 32),
               BlocBuilder<QuestionBloc, Question>(
@@ -106,25 +119,45 @@ class DataView extends HookWidget {
                       '7',
                       '8',
                       '9',
+                      '.',
                       '0',
                       'C',
-                      'Enter',
                       'mol',
                       '個',
+                      ' × 10^',
                       'g',
                       'L',
+                      'Enter',
                     ].asMap().entries.map((entry) {
                       return ElevatedButton(
                         onPressed: () {
-                          if (questionNumberState.value > 10) {
-                            return;
-                          } else if (questionNumberState.value == 10) {
-                            questionNumberState.value++;
-                            isResult.value = true;
-                          } else {
-                            questionNumberState.value++;
+                          switch (entry.key) {
+                            case 11: // clear
+                              answerText.value = '';
+                              break;
+                            case 17: // Enter
+                              // 出題数集計
+                              if (questionNumberState.value > 10) {
+                                return;
+                              } else if (questionNumberState.value == 10) {
+                                questionNumberState.value++;
+                                isResult.value = true;
+                              } else {
+                                questionNumberState.value++;
+                              }
+                              // 答え合わせ
+                              isCorrect.value =
+                                  (question.answer == answerText.value);
+                              if (question.answer == answerText.value) {
+                                scoreState.value += 10;
+                              }
+                              // テキストクリア
+                              answerText.value = '';
+                              break;
+                            default:
+                              answerText.value += entry.value;
+                              break;
                           }
-                          if (question.answer == 1) scoreState.value += 10;
                         },
                         style: ElevatedButton.styleFrom(
                           primary:

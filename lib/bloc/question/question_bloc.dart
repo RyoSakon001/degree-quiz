@@ -10,26 +10,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class QuestionBloc extends Bloc<QuestionEvent, Question> {
   QuestionBloc()
       : super(Question(
-            substance: Substance(
-              id: 0,
-              formula: '',
-              amount: 1,
-              commonName: '',
-            ),
-            givenRate: 1,
-            givenDegree: Degree(
-              type: 0,
-              name: '',
-              degree: '',
-              baseValue: 1,
-            ),
-            desiredDegree: Degree(
-              type: 0,
-              name: '',
-              degree: '',
-              baseValue: 1,
-            ),
-            answer: 1)) {
+          substance: Substance(
+            id: 0,
+            formula: '',
+            amount: 1,
+            commonName: '',
+          ),
+          givenRate: 1,
+          givenDegree: Degree(
+            type: 0,
+            name: '',
+            degree: '',
+            baseValue: 1,
+          ),
+          desiredDegree: Degree(
+            type: 0,
+            name: '',
+            degree: '',
+            baseValue: 1,
+          ),
+          answer: '1mol',
+        )) {
     on<QuestionIncrementPressed>((_, emit) async {
       final substanceData = await FirestoreProvider().getRandomSubstance();
 
@@ -59,7 +60,7 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
           degree: desiredDegreeData['degree'],
           baseValue: desiredDegreeData['baseValue'],
         ),
-        answer: 1,
+        answer: '1mol',
       ));
     });
   }
