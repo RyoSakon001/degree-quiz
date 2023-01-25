@@ -18,18 +18,18 @@ class GamePage extends StatelessWidget {
         BlocProvider(create: (_) => DegreeBloc()),
         BlocProvider(create: (_) => QuestionBloc()),
       ],
-      child: const DataView(),
+      child: const GameView(),
     );
   }
 }
 
-class DataView extends HookWidget {
-  const DataView({Key? key}) : super(key: key);
+class GameView extends HookWidget {
+  const GameView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      context.read<QuestionBloc>().add(QuestionIncrementPressed());
+      context.read<QuestionBloc>().add(QuestionChanged());
       return;
     }, []);
 
@@ -153,7 +153,7 @@ class DataView extends HookWidget {
                               // 次の問題を出す
                               context
                                   .read<QuestionBloc>()
-                                  .add(QuestionIncrementPressed());
+                                  .add(QuestionChanged());
 
                               break;
                             default:

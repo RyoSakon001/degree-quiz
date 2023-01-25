@@ -31,7 +31,7 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
           ),
           answer: '1mol',
         )) {
-    on<QuestionIncrementPressed>((_, emit) async {
+    on<QuestionChanged>((_, emit) async {
       final substanceData = await FirestoreProvider().getRandomSubstance();
 
       final degreeTypeList = _getTwoDifferentNumber();

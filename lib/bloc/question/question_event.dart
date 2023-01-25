@@ -1,3 +1,3 @@
 abstract class QuestionEvent {}
 
-class QuestionIncrementPressed extends QuestionEvent {}
+class QuestionChanged extends QuestionEvent {}
