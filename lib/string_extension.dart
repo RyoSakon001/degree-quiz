@@ -37,4 +37,8 @@ extension StringExtension on String {
         ? text.replaceFirst('e+', ' × 10^')
         : text.replaceFirst('e-', ' × 10^');
   }
+
+  double get molAmount {
+    return 1;
+  }
 }

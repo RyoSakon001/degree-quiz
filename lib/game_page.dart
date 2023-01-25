@@ -6,6 +6,7 @@ import 'package:degree_quiz/model/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:degree_quiz/string_extension.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -147,13 +148,15 @@ class GameView extends HookWidget {
                               }
 
                               // 答え合わせ
-                              // 単位が合っているか判定
+                              // 1.単位 2.数値
                               if (answerType.value ==
-                                  question.desiredDegree.type) {
-                                // 数値が合っているか判定
-                                if (true) {
-                                  scoreState.value += 10;
-                                }
+                                      question.desiredDegree.type &&
+                                  answerNumber.value.molAmount ==
+                                      question.givenRate) {
+                                isCorrect.value = true;
+                                scoreState.value += 10;
+                              } else {
+                                isCorrect.value = false;
                               }
                               // テキストクリア
                               answerNumber.value = '';
