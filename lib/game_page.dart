@@ -28,7 +28,11 @@ class DataView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<QuestionBloc>().add(QuestionIncrementPressed());
+    useEffect(() {
+      context.read<QuestionBloc>().add(QuestionIncrementPressed());
+      return;
+    }, []);
+
     final questionNumberState = useState(1);
     final scoreState = useState(0);
     final isResult = useState(false);
@@ -86,13 +90,6 @@ class DataView extends HookWidget {
               BlocBuilder<QuestionBloc, Question>(
                 builder: (context, question) => Text(question.sentence),
               ),
-              // SizedBox(height: 32),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     context.read<QuestionBloc>().add(QuestionIncrementPressed());
-              //   },
-              //   child: Text('問題を出す'),
-              // ),
               SizedBox(height: 32),
               Text(
                 answerText.value,
@@ -153,6 +150,11 @@ class DataView extends HookWidget {
                               }
                               // テキストクリア
                               answerText.value = '';
+                              // 次の問題を出す
+                              context
+                                  .read<QuestionBloc>()
+                                  .add(QuestionIncrementPressed());
+
                               break;
                             default:
                               answerText.value += entry.value;
