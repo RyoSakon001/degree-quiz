@@ -151,7 +151,7 @@ class GameView extends HookWidget {
                               // 1.単位 2.数値
                               if (answerType.value ==
                                       question.desiredDegree.type &&
-                                  answerNumber.value.molAmount ==
+                                  answerNumber.value.rate(question) ==
                                       question.givenRate) {
                                 isCorrect.value = true;
                                 scoreState.value += 10;

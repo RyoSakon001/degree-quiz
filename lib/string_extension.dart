@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'package:degree_quiz/model/question.dart';
+
 extension StringExtension on String {
   String get cutZero {
     String text = this;
@@ -38,7 +41,28 @@ extension StringExtension on String {
         : text.replaceFirst('e-', ' × 10^');
   }
 
-  double get molAmount {
-    return 1;
+  double rate(Question question) {
+    final ansVal = this;
+    double val = -1;
+    switch (question.desiredDegree.type) {
+      case 0:
+      case 2:
+        val = double.parse(ansVal) / question.desiredDegree.baseValue;
+        break;
+      case 1:
+        val = double.parse(ansVal) / question.substance.amount;
+        break;
+      case 3:
+        if (ansVal.contains(' × 10^')) {
+          List<String> list = ansVal.split(' × 10^');
+          val = double.parse(list[0]) *
+              pow(10, double.parse(list[1]) - 23) /
+              question.desiredDegree.baseValue;
+        }
+        break;
+      default:
+    }
+    val = double.parse(val.toStringAsExponential(2));
+    return val;
   }
 }
