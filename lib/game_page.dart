@@ -39,6 +39,7 @@ class GameView extends HookWidget {
     final scoreState = useState(0);
     final isResult = useState(false);
     final isCorrect = useState(false);
+    final validator = useState('');
     final answerNumber = useState('');
     final answerDegree = useState('');
     final answerType = useState(-1);
@@ -92,6 +93,12 @@ class GameView extends HookWidget {
                         question.sentence,
                         style: appTextStyle(),
                       ),
+              ),
+              Text(
+                validator.value,
+                style: TextStyle(
+                  color: Colors.red,
+                ),
               ),
               isResult.value
                   ? SizedBox(
@@ -148,6 +155,14 @@ class GameView extends HookWidget {
                               answerDegree.value = '';
                               break;
                             case 17: // Enter
+                              if (answerNumber.value.isEmpty) {
+                                validator.value = '数値を入力してください。';
+                                return;
+                              }
+                              if (answerDegree.value.isEmpty) {
+                                validator.value = '単位を入力してください。';
+                                return;
+                              }
 
                               // 出題数集計
                               if (questionNumberState.value > 10) {
@@ -173,6 +188,7 @@ class GameView extends HookWidget {
                               // テキストクリア
                               answerNumber.value = '';
                               answerDegree.value = '';
+                              validator.value = '';
                               // 次の問題を出す
                               context
                                   .read<QuestionBloc>()
@@ -188,7 +204,10 @@ class GameView extends HookWidget {
                               break;
                             default:
                               // 答えが長すぎたらそれ以上入力できない
-                              if (answerNumber.value.length >= 10) return;
+                              if (answerNumber.value.length >= 10) {
+                                validator.value = '数値は10文字以内で入力してください。';
+                                return;
+                              }
                               answerNumber.value += entry.value;
                               break;
                           }
