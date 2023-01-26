@@ -2,11 +2,11 @@ import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
-import 'package:degree_quiz/model/degree.dart';
 import 'package:degree_quiz/model/question.dart';
-import 'package:degree_quiz/model/substance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:degree_quiz/string_extension.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -19,60 +19,177 @@ class GamePage extends StatelessWidget {
         BlocProvider(create: (_) => DegreeBloc()),
         BlocProvider(create: (_) => QuestionBloc()),
       ],
-      child: const DataView(),
+      child: const GameView(),
     );
   }
 }
 
-class DataView extends StatelessWidget {
-  const DataView({Key? key}) : super(key: key);
+class GameView extends HookWidget {
+  const GameView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      context.read<QuestionBloc>().add(QuestionChanged());
+      return;
+    }, []);
+
+    final questionNumberState = useState(1);
+    final scoreState = useState(0);
+    final isResult = useState(false);
+    final isCorrect = useState(false);
+    final answerNumber = useState('');
+    final answerDegree = useState('');
+    final answerType = useState(-1);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/');
-                      },
-                      child: Text('戻る'),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: Text('戻る'),
+                  ),
+                  if (questionNumberState.value != 1)
+                    Text(isCorrect.value ? '正解！' : '不正解！'),
+                  ElevatedButton(
+                    onPressed: () => _showTerms(context),
+                    child: Text('条件'),
+                  ),
+                ],
+              ),
+              (isResult.value)
+                  ? Column(
+                      children: [
+                        Text('終了！'),
+                        Text('最終スコア：${scoreState.value}'),
+                        SizedBox(
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              isResult.value = false;
+                              questionNumberState.value = 1;
+                              scoreState.value = 0;
+                            },
+                            child: Text('再チャレンジ'),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Text('${questionNumberState.value}問目'),
+                        Text('得点：${scoreState.value}/100'),
+                        SizedBox(height: 48),
+                      ],
                     ),
-                    ElevatedButton(
-                      onPressed: () => _showTerms(context),
-                      child: Text('条件'),
-                    ),
-                  ],
+              BlocBuilder<QuestionBloc, Question>(
+                builder: (context, question) => Text(question.sentence),
+              ),
+              SizedBox(height: 32),
+              Text(
+                answerNumber.value + answerDegree.value,
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 32),
+              BlocBuilder<QuestionBloc, Question>(
+                builder: (context, question) => Expanded(
+                  child: GridView.count(
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    children: [
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                      '6',
+                      '7',
+                      '8',
+                      '9',
+                      '.',
+                      '0',
+                      ' × 10^',
+                      'mol',
+                      'g',
+                      'L',
+                      '個',
+                      'C',
+                      'Enter',
+                    ].asMap().entries.map((entry) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          switch (entry.key) {
+                            case 16: // clear
+                              answerNumber.value = '';
+                              answerDegree.value = '';
+                              break;
+                            case 17: // Enter
+                              // 出題数集計
+                              if (questionNumberState.value > 10) {
+                                return;
+                              } else if (questionNumberState.value == 10) {
+                                questionNumberState.value++;
+                                isResult.value = true;
+                              } else {
+                                questionNumberState.value++;
+                              }
+
+                              // 答え合わせ
+                              // 1.単位 2.数値
+                              if (answerType.value ==
+                                      question.desiredDegree.type &&
+                                  answerNumber.value.rate(question) ==
+                                      question.givenRate) {
+                                isCorrect.value = true;
+                                scoreState.value += 10;
+                              } else {
+                                isCorrect.value = false;
+                              }
+                              // テキストクリア
+                              answerNumber.value = '';
+                              answerDegree.value = '';
+                              // 次の問題を出す
+                              context
+                                  .read<QuestionBloc>()
+                                  .add(QuestionChanged());
+
+                              break;
+                            case 12: // mol
+                            case 13: // g
+                            case 14: // L
+                            case 15: // 個
+                              answerDegree.value = entry.value;
+                              answerType.value = entry.key - 12; // 0,1,2,3
+                              break;
+                            default:
+                              answerNumber.value += entry.value;
+                              break;
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary:
+                              (entry.key <= 11) ? Colors.blue : Colors.green,
+                        ),
+                        child: Text(entry.value),
+                      );
+                    }).toList(),
+                  ),
                 ),
-                BlocBuilder<SubstanceBloc, Substance>(
-                  builder: (context, substance) => Text(substance.formula,
-                      style: Theme.of(context).textTheme.headline1),
-                ),
-                BlocBuilder<DegreeBloc, Degree>(
-                  builder: (context, degree) => Text(degree.name,
-                      style: Theme.of(context).textTheme.headline1),
-                ),
-                BlocBuilder<QuestionBloc, Question>(
-                  builder: (context, question) => Text(question.sentence),
-                ),
-                SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<QuestionBloc>()
-                        .add(QuestionIncrementPressed());
-                  },
-                  child: Text('問題を出す'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -109,6 +226,47 @@ class DataView extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class Keyboard extends StatelessWidget {
+  const Keyboard({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: 4,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        children: [
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          '0',
+          'C',
+          'Enter',
+          'mol',
+          '個',
+          'g',
+          'L',
+        ].asMap().entries.map((entry) {
+          return ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              primary: (entry.key <= 11) ? Colors.blue : Colors.green,
+            ),
+            child: Text(entry.value),
+          );
+        }).toList(),
+      ),
     );
   }
 }
