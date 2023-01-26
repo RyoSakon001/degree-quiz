@@ -91,7 +91,9 @@ class GameView extends HookWidget {
                       ],
                     ),
               BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => Text(question.sentence),
+                builder: (context, question) => questionNumberState.value == 11
+                    ? Text('')
+                    : Text(question.sentence),
               ),
               SizedBox(height: 32),
               Text(
