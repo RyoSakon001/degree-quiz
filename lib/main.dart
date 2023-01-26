@@ -11,11 +11,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await Future.delayed(const Duration(seconds: 2));
-  FlutterNativeSplash.remove();
 
   runApp(const MyApp());
 }

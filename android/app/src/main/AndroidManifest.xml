@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.degree_quiz">
    <application
-        android:label="degree_quiz"
+        android:label="物質量計算"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
