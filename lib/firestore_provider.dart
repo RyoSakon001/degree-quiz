@@ -7,7 +7,7 @@ class FirestoreProvider {
   // Collection名
   static const substances = 'substances';
   static const degrees = 'degrees';
-  static const substanceListLength = 2;
+  static const substanceListLength = 8;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

@@ -1,3 +1,4 @@
+import 'package:degree_quiz/app_text_style.dart';
 import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
@@ -38,6 +39,7 @@ class GameView extends HookWidget {
     final scoreState = useState(0);
     final isResult = useState(false);
     final isCorrect = useState(false);
+    final validator = useState('');
     final answerNumber = useState('');
     final answerDegree = useState('');
     final answerType = useState(-1);
@@ -45,7 +47,7 @@ class GameView extends HookWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Row(
@@ -58,7 +60,12 @@ class GameView extends HookWidget {
                     child: Text('戻る'),
                   ),
                   if (questionNumberState.value != 1)
-                    Text(isCorrect.value ? '正解！' : '不正解！'),
+                    Text(
+                      isCorrect.value ? '正解！' : '残念！',
+                      style: appTextStyle(
+                        color: isCorrect.value ? Colors.red : Colors.blue,
+                      ),
+                    ),
                   ElevatedButton(
                     onPressed: () => _showTerms(context),
                     child: Text('条件'),
@@ -70,37 +77,48 @@ class GameView extends HookWidget {
                       children: [
                         Text('終了！'),
                         Text('最終スコア：${scoreState.value}'),
-                        SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              isResult.value = false;
-                              questionNumberState.value = 1;
-                              scoreState.value = 0;
-                            },
-                            child: Text('再チャレンジ'),
-                          ),
-                        ),
                       ],
                     )
                   : Column(
                       children: [
                         Text('${questionNumberState.value}問目'),
                         Text('得点：${scoreState.value}/100'),
-                        SizedBox(height: 48),
                       ],
                     ),
-              BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => Text(question.sentence),
-              ),
               SizedBox(height: 32),
-              Text(
-                answerNumber.value + answerDegree.value,
-                style: TextStyle(
-                    color: Colors.blueAccent,
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w500),
+              BlocBuilder<QuestionBloc, Question>(
+                builder: (context, question) => questionNumberState.value == 11
+                    ? Text('')
+                    : Text(
+                        question.sentence,
+                        style: appTextStyle(),
+                      ),
               ),
+              Text(
+                validator.value,
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              isResult.value
+                  ? SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          isResult.value = false;
+                          questionNumberState.value = 1;
+                          scoreState.value = 0;
+                        },
+                        child: Text('再チャレンジ'),
+                      ),
+                    )
+                  : Text(
+                      answerNumber.value + answerDegree.value,
+                      style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.w500),
+                    ),
               SizedBox(height: 32),
               BlocBuilder<QuestionBloc, Question>(
                 builder: (context, question) => Expanded(
@@ -121,7 +139,7 @@ class GameView extends HookWidget {
                       '9',
                       '.',
                       '0',
-                      ' × 10^',
+                      ' ×10^',
                       'mol',
                       'g',
                       'L',
@@ -137,6 +155,15 @@ class GameView extends HookWidget {
                               answerDegree.value = '';
                               break;
                             case 17: // Enter
+                              if (answerNumber.value.isEmpty) {
+                                validator.value = '数値を入力してください。';
+                                return;
+                              }
+                              if (answerDegree.value.isEmpty) {
+                                validator.value = '単位を入力してください。';
+                                return;
+                              }
+
                               // 出題数集計
                               if (questionNumberState.value > 10) {
                                 return;
@@ -161,6 +188,7 @@ class GameView extends HookWidget {
                               // テキストクリア
                               answerNumber.value = '';
                               answerDegree.value = '';
+                              validator.value = '';
                               // 次の問題を出す
                               context
                                   .read<QuestionBloc>()
@@ -175,13 +203,21 @@ class GameView extends HookWidget {
                               answerType.value = entry.key - 12; // 0,1,2,3
                               break;
                             default:
+                              // 答えが長すぎたらそれ以上入力できない
+                              if (answerNumber.value.length >= 10) {
+                                validator.value = '数値は10文字以内で入力してください。';
+                                return;
+                              }
                               answerNumber.value += entry.value;
                               break;
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary:
-                              (entry.key <= 11) ? Colors.blue : Colors.green,
+                          primary: (entry.key <= 11)
+                              ? Colors.blue
+                              : (entry.key <= 15)
+                                  ? Colors.green
+                                  : Colors.amber,
                         ),
                         child: Text(entry.value),
                       );
@@ -226,47 +262,6 @@ class GameView extends HookWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class Keyboard extends StatelessWidget {
-  const Keyboard({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.count(
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 4,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        children: [
-          '1',
-          '2',
-          '3',
-          '4',
-          '5',
-          '6',
-          '7',
-          '8',
-          '9',
-          '0',
-          'C',
-          'Enter',
-          'mol',
-          '個',
-          'g',
-          'L',
-        ].asMap().entries.map((entry) {
-          return ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              primary: (entry.key <= 11) ? Colors.blue : Colors.green,
-            ),
-            child: Text(entry.value),
-          );
-        }).toList(),
-      ),
     );
   }
 }
