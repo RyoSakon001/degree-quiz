@@ -37,8 +37,8 @@ extension StringExtension on String {
     text = text.cutLast + power.toString();
 
     return (text.contains('e+'))
-        ? text.replaceFirst('e+', ' × 10^')
-        : text.replaceFirst('e-', ' × 10^');
+        ? text.replaceFirst('e+', ' ×10^')
+        : text.replaceFirst('e-', ' ×10^');
   }
 
   double rate(Question question) {
@@ -53,8 +53,8 @@ extension StringExtension on String {
         val = double.parse(ansVal) / question.substance.amount;
         break;
       case 3:
-        if (ansVal.contains(' × 10^')) {
-          List<String> list = ansVal.split(' × 10^');
+        if (ansVal.contains(' ×10^')) {
+          List<String> list = ansVal.split(' ×10^');
           val = double.parse(list[0]) *
               pow(10, double.parse(list[1]) - 23) /
               question.desiredDegree.baseValue;
