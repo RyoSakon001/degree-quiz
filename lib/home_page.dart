@@ -63,11 +63,15 @@ class HomePage extends StatelessWidget {
           children: [
             ListTile(
               title: const Text("利用規約"),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/terms_of_service');
+              },
             ),
             ListTile(
               title: const Text("プライバシーポリシー"),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/privacy_policy');
+              },
             ),
           ],
         ),
