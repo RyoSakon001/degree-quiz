@@ -1,7 +1,7 @@
 import 'package:degree_quiz/game_page.dart';
 import 'package:degree_quiz/home_page.dart';
 import 'package:degree_quiz/privacy_policy_page.dart';
-import 'package:degree_quiz/tems_page.dart';
+import 'package:degree_quiz/terms_page.dart';
 import 'package:degree_quiz/tutorial_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
