@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.degree_quiz">
+    package="com.skn.degree_quiz">
    <application
         android:label="物質量計算"
         android:name="${applicationName}"

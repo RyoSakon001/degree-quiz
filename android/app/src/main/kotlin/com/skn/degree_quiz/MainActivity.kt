@@ -1,4 +1,4 @@
-package com.example.degree_quiz
+package com.skn.degree_quiz
 
 import io.flutter.embedding.android.FlutterActivity
 

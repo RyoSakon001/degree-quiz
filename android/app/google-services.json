@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:275598721332:android:31f88acc352d119fe2a561",
         "android_client_info": {
-          "package_name": "com.example.degree_quiz"
+          "package_name": "com.skn.degree_quiz"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "275598721332-vajopv8arnibcbvb0slgaln9j73u3bua.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.degreeQuiz"
+                "bundle_id": "com.skn.degreeQuiz"
               }
             }
           ]
