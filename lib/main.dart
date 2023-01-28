@@ -1,5 +1,7 @@
 import 'package:degree_quiz/game_page.dart';
 import 'package:degree_quiz/home_page.dart';
+import 'package:degree_quiz/privacy_policy_page.dart';
+import 'package:degree_quiz/tems_page.dart';
 import 'package:degree_quiz/tutorial_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +29,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => HomePage(),
         '/tutorial': (context) => TutorialPage(),
         '/game': (context) => GamePage(),
+        '/terms_of_service': (context) => TermsPage(),
+        '/privacy_policy': (context) => PrivacyPolicyPage(),
       },
       initialRoute: "/",
       title: 'Flutter Overboard Demo',

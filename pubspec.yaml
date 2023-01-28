@@ -42,6 +42,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   flutter_hooks: ^0.18.5+1
   flutter_native_splash: ^2.2.9
+  flutter_html: ^3.0.0-alpha.6
 
 dev_dependencies:
   flutter_test:
