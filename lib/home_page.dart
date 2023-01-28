@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+  final sideBarKey = GlobalKey<ScaffoldState>(); // ここでkeyを定義
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial(context));
 
     return Scaffold(
+      key: sideBarKey,
       body: SafeArea(
         child: Container(
             padding: EdgeInsets.fromLTRB(16, 64, 16, 16),
@@ -20,7 +22,7 @@ class HomePage extends StatelessWidget {
                   'mol計算ゲーム',
                   style: TextStyle(fontSize: 40),
                 ),
-                SizedBox(height: 80),
+                SizedBox(height: 40),
                 SimpleButton(
                   text: 'スタート！',
                   borderColor: Colors.green,
@@ -28,12 +30,20 @@ class HomePage extends StatelessWidget {
                     Navigator.pushNamed(context, '/game');
                   },
                 ),
-                SizedBox(height: 80),
+                SizedBox(height: 40),
                 SimpleButton(
                   text: 'チュートリアル',
                   borderColor: Colors.orange,
                   onPressed: () {
                     Navigator.pushNamed(context, '/tutorial');
+                  },
+                ),
+                SizedBox(height: 40),
+                SimpleButton(
+                  text: 'ヘルプ',
+                  borderColor: Colors.lightBlue,
+                  onPressed: () {
+                    sideBarKey.currentState!.openEndDrawer();
                   },
                 ),
                 SizedBox(height: 20),
@@ -47,6 +57,20 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             )),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text("利用規約"),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text("プライバシーポリシー"),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
