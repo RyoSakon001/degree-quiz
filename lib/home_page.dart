@@ -48,8 +48,8 @@ class HomePage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 SizedBox(
-                  width: 250,
-                  height: 250,
+                  width: 200,
+                  height: 200,
                   child: Image(
                     image: AssetImage('assets/images/frasco.png'),
                     fit: BoxFit.fill,
