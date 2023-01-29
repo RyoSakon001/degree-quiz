@@ -124,6 +124,10 @@ class GameView extends HookWidget {
                 builder: (context, question) => Expanded(
                   child: GridView.count(
                     physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          (MediaQuery.of(context).size.width < 480) ? 24 : 256,
+                    ),
                     crossAxisCount: 4,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
