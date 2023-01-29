@@ -43,11 +43,15 @@ class GameView extends HookWidget {
     final answerNumber = useState('');
     final answerDegree = useState('');
     final answerType = useState(-1);
+    final bool isiPad = MediaQuery.of(context).size.width >= 560;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(
+            vertical: isiPad ? 64 : 16,
+            horizontal: isiPad ? 200 : 24,
+          ),
           child: Column(
             children: [
               Row(
@@ -63,6 +67,7 @@ class GameView extends HookWidget {
                     Text(
                       isCorrect.value ? '正解！' : '残念！',
                       style: appTextStyle(
+                        isiPad: isiPad,
                         color: isCorrect.value ? Colors.red : Colors.blue,
                       ),
                     ),
@@ -72,33 +77,29 @@ class GameView extends HookWidget {
                   ),
                 ],
               ),
-              (isResult.value)
-                  ? Column(
-                      children: [
-                        Text('終了！'),
-                        Text('最終スコア：${scoreState.value}'),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Text('${questionNumberState.value}問目'),
-                        Text('得点：${scoreState.value}/100'),
-                      ],
-                    ),
+              Text(
+                isResult.value
+                    ? '終了！\n最終スコア：${scoreState.value}'
+                    : '${questionNumberState.value}問目\n得点：${scoreState.value}/100',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: isiPad ? 24 : 12),
+              ),
               SizedBox(height: 32),
               BlocBuilder<QuestionBloc, Question>(
                 builder: (context, question) => questionNumberState.value == 11
                     ? Text('')
                     : Text(
                         question.sentence,
-                        style: appTextStyle(),
+                        style: appTextStyle(isiPad: isiPad),
                       ),
               ),
-              Text(
-                validator.value,
-                style: TextStyle(
-                  color: Colors.red,
-                ),
+              SizedBox(
+                height: isiPad ? 36 : 18,
+                child: Text(validator.value,
+                    style: TextStyle(
+                      fontSize: isiPad ? 28 : 12,
+                      color: Colors.red,
+                    )),
               ),
               isResult.value
                   ? SizedBox(
@@ -124,10 +125,7 @@ class GameView extends HookWidget {
                 builder: (context, question) => Expanded(
                   child: GridView.count(
                     physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal:
-                          (MediaQuery.of(context).size.width < 480) ? 24 : 256,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     crossAxisCount: 4,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
@@ -217,13 +215,17 @@ class GameView extends HookWidget {
                           }
                         },
                         style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.all(0),
                           primary: (entry.key <= 11)
                               ? Colors.blue
                               : (entry.key <= 15)
                                   ? Colors.green
                                   : Colors.amber,
                         ),
-                        child: Text(entry.value),
+                        child: Text(
+                          entry.value,
+                          style: appTextStyle(isiPad: isiPad),
+                        ),
                       );
                     }).toList(),
                   ),
