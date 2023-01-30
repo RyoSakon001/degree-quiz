@@ -55,6 +55,7 @@ class GameView extends HookWidget {
             ),
             child: Column(
               children: [
+                // 上の部分
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -78,6 +79,7 @@ class GameView extends HookWidget {
                     ),
                   ],
                 ),
+                // 中段
                 Text(
                   isResult.value
                       ? '終了！\n最終スコア：${scoreState.value}'
@@ -88,8 +90,9 @@ class GameView extends HookWidget {
                 SizedBox(height: 32),
                 Text(
                   questionNumberState.value == 11 ? '' : question.sentence,
-                        style: appTextStyle(isiPad: isiPad),
-                      ),
+                  style: appTextStyle(isiPad: isiPad),
+                ),
+                // バリデーションメッセージ
                 SizedBox(
                   height: isiPad ? 36 : 18,
                   child: Text(validator.value,
@@ -98,6 +101,7 @@ class GameView extends HookWidget {
                         color: Colors.red,
                       )),
                 ),
+                // 回答
                 isResult.value
                     ? SizedBox(
                         height: 48,
@@ -119,6 +123,7 @@ class GameView extends HookWidget {
                             fontWeight: FontWeight.w500),
                       ),
                 SizedBox(height: 32),
+                // ボタン部分
                 Expanded(
                   child: GridView.count(
                     physics: NeverScrollableScrollPhysics(),
