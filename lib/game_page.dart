@@ -3,6 +3,7 @@ import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
+import 'package:degree_quiz/constants.dart';
 import 'package:degree_quiz/model/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,109 +47,88 @@ class GameView extends HookWidget {
     final bool isiPad = MediaQuery.of(context).size.width >= 560;
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: isiPad ? 64 : 16,
-            horizontal: isiPad ? 200 : 24,
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/');
-                    },
-                    child: Text('戻る'),
-                  ),
-                  if (questionNumberState.value != 1)
-                    Text(
-                      isCorrect.value ? '正解！' : '残念！',
-                      style: appTextStyle(
-                        isiPad: isiPad,
-                        color: isCorrect.value ? Colors.red : Colors.blue,
-                      ),
+      body: BlocBuilder<QuestionBloc, Question>(
+        builder: (context, question) => SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: isiPad ? 64 : 16,
+              horizontal: isiPad ? 200 : 24,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/');
+                      },
+                      child: Text('戻る'),
                     ),
-                  ElevatedButton(
-                    onPressed: () => _showTerms(context),
-                    child: Text('条件'),
-                  ),
-                ],
-              ),
-              Text(
-                isResult.value
-                    ? '終了！\n最終スコア：${scoreState.value}'
-                    : '${questionNumberState.value}問目\n得点：${scoreState.value}/100',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: isiPad ? 24 : 12),
-              ),
-              SizedBox(height: 32),
-              BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => questionNumberState.value == 11
+                    if (questionNumberState.value != 1)
+                      Text(
+                        isCorrect.value ? '正解！' : '残念！',
+                        style: appTextStyle(
+                          isiPad: isiPad,
+                          color: isCorrect.value ? Colors.red : Colors.blue,
+                        ),
+                      ),
+                    ElevatedButton(
+                      onPressed: () => _showTerms(context),
+                      child: Text('条件'),
+                    ),
+                  ],
+                ),
+                Text(
+                  isResult.value
+                      ? '終了！\n最終スコア：${scoreState.value}'
+                      : '${questionNumberState.value}問目\n得点：${scoreState.value}/100',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: isiPad ? 24 : 12),
+                ),
+                SizedBox(height: 32),
+                questionNumberState.value == 11
                     ? Text('')
                     : Text(
                         question.sentence,
                         style: appTextStyle(isiPad: isiPad),
                       ),
-              ),
-              SizedBox(
-                height: isiPad ? 36 : 18,
-                child: Text(validator.value,
-                    style: TextStyle(
-                      fontSize: isiPad ? 28 : 12,
-                      color: Colors.red,
-                    )),
-              ),
-              isResult.value
-                  ? SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          isResult.value = false;
-                          questionNumberState.value = 1;
-                          scoreState.value = 0;
-                        },
-                        child: Text('再チャレンジ'),
-                      ),
-                    )
-                  : Text(
-                      answerNumber.value + answerDegree.value,
+                SizedBox(
+                  height: isiPad ? 36 : 18,
+                  child: Text(validator.value,
                       style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w500),
-                    ),
-              SizedBox(height: 32),
-              BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => Expanded(
+                        fontSize: isiPad ? 28 : 12,
+                        color: Colors.red,
+                      )),
+                ),
+                isResult.value
+                    ? SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            isResult.value = false;
+                            questionNumberState.value = 1;
+                            scoreState.value = 0;
+                          },
+                          child: Text('再チャレンジ'),
+                        ),
+                      )
+                    : Text(
+                        answerNumber.value + answerDegree.value,
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w500),
+                      ),
+                SizedBox(height: 32),
+                Expanded(
                   child: GridView.count(
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     crossAxisCount: 4,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
-                    children: [
-                      '1',
-                      '2',
-                      '3',
-                      '4',
-                      '5',
-                      '6',
-                      '7',
-                      '8',
-                      '9',
-                      '.',
-                      '0',
-                      ' ×10^',
-                      'mol',
-                      'g',
-                      'L',
-                      '個',
-                      'C',
-                      'Enter',
-                    ].asMap().entries.map((entry) {
+                    children: buttonList.asMap().entries.map((entry) {
                       return ElevatedButton(
                         onPressed: () {
                           switch (entry.key) {
@@ -230,8 +210,8 @@ class GameView extends HookWidget {
                     }).toList(),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
