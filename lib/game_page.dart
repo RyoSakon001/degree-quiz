@@ -42,8 +42,7 @@ class GameView extends HookWidget {
     final isCorrect = useState(false);
     final validator = useState('');
     final answerNumber = useState('');
-    final answerDegree = useState('');
-    final answerType = useState(-1);
+    final answerDegreeType = useState(-1);
     final bool isiPad = MediaQuery.of(context).size.width >= 560;
 
     return Scaffold(
@@ -114,7 +113,8 @@ class GameView extends HookWidget {
                         ),
                       )
                     : Text(
-                        answerNumber.value + answerDegree.value,
+                        answerNumber.value +
+                            _getDegreeName(answerDegreeType.value),
                         style: TextStyle(
                             color: Colors.blueAccent,
                             fontSize: 30.0,
@@ -131,67 +131,60 @@ class GameView extends HookWidget {
                     children: buttonList.asMap().entries.map((entry) {
                       return ElevatedButton(
                         onPressed: () {
-                          switch (entry.key) {
-                            case 16: // clear
-                              answerNumber.value = '';
-                              answerDegree.value = '';
-                              break;
-                            case 17: // Enter
-                              if (answerNumber.value.isEmpty) {
-                                validator.value = '数値を入力してください。';
-                                return;
-                              }
-                              if (answerDegree.value.isEmpty) {
-                                validator.value = '単位を入力してください。';
-                                return;
-                              }
+                          // 数字ボタン
+                          if (_isNumberKey(entry.key)) {
+                            if (answerNumber.value.length >= 10) {
+                              validator.value = '数値は10文字以内で入力してください。';
+                              return;
+                            }
+                            answerNumber.value += entry.value;
+                          }
+                          // 単位ボタン
+                          if (_isDegreeKey(entry.key)) {
+                            answerDegreeType.value = entry.key - 12;
+                          }
+                          // Clearボタン
+                          if (_isClearKey(entry.key)) {
+                            answerNumber.value = '';
+                            answerDegreeType.value = -1;
+                          }
+                          // Enterボタン
+                          if (_isEnterKey(entry.key)) {
+                            validator.value = _validator(
+                              numberStr: answerNumber.value,
+                              degreeType: answerDegreeType.value,
+                            );
+                            if (validator.value.isNotEmpty) {
+                              return;
+                            }
 
-                              // 出題数集計
-                              if (questionNumberState.value > 10) {
-                                return;
-                              } else if (questionNumberState.value == 10) {
-                                questionNumberState.value++;
-                                isResult.value = true;
-                              } else {
-                                questionNumberState.value++;
-                              }
+                            // 出題数集計
+                            if (questionNumberState.value > 10) {
+                              return;
+                            } else if (questionNumberState.value == 10) {
+                              questionNumberState.value++;
+                              isResult.value = true;
+                            } else {
+                              questionNumberState.value++;
+                            }
 
-                              // 答え合わせ
-                              // 1.単位 2.数値
-                              if (answerType.value ==
-                                      question.desiredDegree.type &&
-                                  answerNumber.value.rate(question) ==
-                                      question.givenRate) {
-                                isCorrect.value = true;
-                                scoreState.value += 10;
-                              } else {
-                                isCorrect.value = false;
-                              }
-                              // テキストクリア
-                              answerNumber.value = '';
-                              answerDegree.value = '';
-                              validator.value = '';
-                              // 次の問題を出す
-                              context
-                                  .read<QuestionBloc>()
-                                  .add(QuestionChanged());
-
-                              break;
-                            case 12: // mol
-                            case 13: // g
-                            case 14: // L
-                            case 15: // 個
-                              answerDegree.value = entry.value;
-                              answerType.value = entry.key - 12; // 0,1,2,3
-                              break;
-                            default:
-                              // 答えが長すぎたらそれ以上入力できない
-                              if (answerNumber.value.length >= 10) {
-                                validator.value = '数値は10文字以内で入力してください。';
-                                return;
-                              }
-                              answerNumber.value += entry.value;
-                              break;
+                            // 答え合わせ
+                            // 1.単位 2.数値
+                            if (answerDegreeType.value ==
+                                    question.desiredDegree.type &&
+                                answerNumber.value.rate(question) ==
+                                    question.givenRate) {
+                              isCorrect.value = true;
+                              scoreState.value += 10;
+                            } else {
+                              isCorrect.value = false;
+                            }
+                            // テキストクリア
+                            answerNumber.value = '';
+                            answerDegreeType.value = -1;
+                            validator.value = '';
+                            // 次の問題を出す
+                            context.read<QuestionBloc>().add(QuestionChanged());
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -234,5 +227,82 @@ class GameView extends HookWidget {
         );
       },
     );
+  }
+
+  bool _isNumberKey(int key) {
+    return (0 <= key && key <= 11);
+  }
+
+  bool _isDegreeKey(int key) {
+    return (12 <= key && key <= 15);
+  }
+
+  bool _isClearKey(int key) {
+    return (key == 16);
+  }
+
+  bool _isEnterKey(int key) {
+    return (key == 17);
+  }
+
+  String _getDegreeName(int type) {
+    if (type == 0) {
+      return 'mol';
+    } else if (type == 1) {
+      return 'g';
+    } else if (type == 2) {
+      return 'L';
+    } else if (type == 3) {
+      return '個';
+    } else {
+      return '';
+    }
+  }
+
+  String _validator({
+    required String numberStr,
+    required int degreeType,
+  }) {
+    if (numberStr.isEmpty) {
+      return '数値を入力してください。';
+    }
+    if (degreeType == -1) {
+      return '単位を入力してください。';
+    }
+
+    // 数値文字列の最初は必ず数値である
+    if (!RegExp(r'(\d+)').hasMatch(numberStr[0])) {
+      return '数値を正しく入力してください。1';
+    }
+
+    // 「.」は２回以上使用できない
+    if (RegExp(r"\.").allMatches(numberStr).length >= 2) {
+      return '「.」は２回以上使用できません。';
+    }
+
+    // 指数は２回以上使用できない
+    if (RegExp(r"×").allMatches(numberStr).length >= 2) {
+      return '指数は２回以上使用できません。';
+    }
+
+    int dotIndex = RegExp(r"\.").firstMatch(numberStr)?.start ?? -1;
+    int crossIndex = RegExp(r"\×").firstMatch(numberStr)?.start ?? -1;
+
+    // 「.」を含む場合、前後に必ず数字がある
+    if (dotIndex > -1 && !RegExp(r'(\d+)\.(\d+)').hasMatch(numberStr)) {
+      return '数値を正しく入力してください。２';
+    }
+
+    // 「.」は「×」の後ろにきてはいけない
+    if (dotIndex > -1 && crossIndex > -1 && dotIndex > crossIndex) {
+      return '指数は正の整数を指定してください。';
+    }
+
+    // 指数は必ず数値が必要
+    if (crossIndex > -1 && !RegExp(r'\^(\d+)').hasMatch(numberStr)) {
+      return '指数を指定してください。';
+    }
+
+    return '';
   }
 }

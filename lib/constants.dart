@@ -20,4 +20,4 @@ const List<String> buttonList = [
 ];
 
 const String conditionText =
-    '・アボガドロ定数は\n6.0 ✖︎ 10 ^ 23とする。\n・気体は理想気体とする。\n・標準状態とする。\n・原子量は以下の通り。\n\nH = 1\nC = 12\nN = 14\nO = 16\nNa = 23\nMg = 24\nAl = 27\nS = 32\nCa = 40\n';
+    '・アボガドロ定数は\n6.0 × 10 ^ 23とする。\n・気体は理想気体とする。\n・標準状態とする。\n・原子量は以下の通り。\n\nH = 1\nC = 12\nN = 14\nO = 16\nNa = 23\nMg = 24\nAl = 27\nS = 32\nCa = 40\n';
