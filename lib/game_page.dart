@@ -74,7 +74,7 @@ class GameView extends HookWidget {
                         ),
                       ),
                     ElevatedButton(
-                      onPressed: () => _showTerms(context),
+                      onPressed: () => _showCondition(context),
                       child: Text('条件'),
                     ),
                   ],
@@ -218,28 +218,13 @@ class GameView extends HookWidget {
     );
   }
 
-  void _showTerms(BuildContext context) async {
+  void _showCondition(BuildContext context) async {
     await showDialog(
       context: context,
       builder: (context) {
-        String text = '';
-        text += '・アボガドロ定数は\n';
-        text += '6.0 ✖︎ 10 ^ 23とする。\n';
-        text += '・気体は理想気体とする。\n';
-        text += '・標準状態とする。\n';
-        text += '・原子量は以下の通り。\n\n';
-        text += 'H = 1\n';
-        text += 'C = 12\n';
-        text += 'N = 14\n';
-        text += 'O = 16\n';
-        text += 'Na = 23\n';
-        text += 'Mg = 24\n';
-        text += 'Al = 27\n';
-        text += 'S = 32\n';
-        text += 'Ca = 40\n';
         return AlertDialog(
           title: Text('＜条件＞'),
-          content: Text(text),
+          content: Text(conditionText),
           actions: [
             ElevatedButton(
               child: const Text('プレイ画面に戻る'),
