@@ -189,9 +189,9 @@ class GameView extends HookWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),
-                          primary: (entry.key <= 11)
+                          primary: _isNumberKey(entry.key)
                               ? Colors.blue
-                              : (entry.key <= 15)
+                              : _isDegreeKey(entry.key)
                                   ? Colors.green
                                   : Colors.amber,
                         ),
