@@ -56,28 +56,41 @@ class GameView extends HookWidget {
             child: Column(
               children: [
                 // 上の部分
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/');
-                      },
-                      child: Text('戻る'),
-                    ),
-                    if (questionNumberState.value != 1)
-                      Text(
-                        isCorrect.value ? '正解！' : '残念！',
-                        style: appTextStyle(
-                          isiPad: isiPad,
-                          color: isCorrect.value ? Colors.red : Colors.blue,
+                SizedBox(
+                  height: isiPad ? 96 : 48,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/');
+                        },
+                        child: Text(
+                          '戻る',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                          ),
                         ),
                       ),
-                    ElevatedButton(
-                      onPressed: () => _showCondition(context),
-                      child: Text('条件'),
-                    ),
-                  ],
+                      if (questionNumberState.value != 1)
+                        Text(
+                          isCorrect.value ? '正解！' : '残念！',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                            color: isCorrect.value ? Colors.red : Colors.blue,
+                          ),
+                        ),
+                      ElevatedButton(
+                        onPressed: () => _showCondition(context),
+                        child: Text(
+                          '条件',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 // 中段
                 Text(
