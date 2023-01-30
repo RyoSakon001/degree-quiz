@@ -89,9 +89,26 @@ class GameView extends HookWidget {
                 ),
                 SizedBox(height: 32),
                 // 問題文
-                Text(
-                  questionNumberState.value == 11 ? '' : question.sentence,
-                  style: appTextStyle(isiPad: isiPad),
+                SizedBox(
+                  height: isiPad ? 108 : 54,
+                  child: isResult.value
+                      ? ElevatedButton(
+                          onPressed: () {
+                            isResult.value = false;
+                            questionNumberState.value = 1;
+                            scoreState.value = 0;
+                          },
+                          child: Text(
+                            '再チャレンジ',
+                            style: appTextStyle(isiPad: isiPad),
+                          ),
+                        )
+                      : Text(
+                          questionNumberState.value == 11
+                              ? ''
+                              : question.sentence,
+                          style: appTextStyle(isiPad: isiPad),
+                        ),
                 ),
                 // バリデーションメッセージ
                 SizedBox(
@@ -103,26 +120,13 @@ class GameView extends HookWidget {
                       )),
                 ),
                 // 回答
-                isResult.value
-                    ? SizedBox(
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            isResult.value = false;
-                            questionNumberState.value = 1;
-                            scoreState.value = 0;
-                          },
-                          child: Text('再チャレンジ'),
-                        ),
-                      )
-                    : Text(
-                        answerNumber.value +
-                            _getDegreeName(answerDegreeType.value),
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.w500),
-                      ),
+                Text(
+                  answerNumber.value + _getDegreeName(answerDegreeType.value),
+                  style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w500),
+                ),
                 SizedBox(height: 32),
                 // ボタン部分
                 Expanded(
