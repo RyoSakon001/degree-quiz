@@ -86,10 +86,8 @@ class GameView extends HookWidget {
                   style: TextStyle(fontSize: isiPad ? 24 : 12),
                 ),
                 SizedBox(height: 32),
-                questionNumberState.value == 11
-                    ? Text('')
-                    : Text(
-                        question.sentence,
+                Text(
+                  questionNumberState.value == 11 ? '' : question.sentence,
                         style: appTextStyle(isiPad: isiPad),
                       ),
                 SizedBox(
