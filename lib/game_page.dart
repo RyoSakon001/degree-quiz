@@ -3,6 +3,7 @@ import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
 import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
+import 'package:degree_quiz/constants.dart';
 import 'package:degree_quiz/model/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,223 +42,203 @@ class GameView extends HookWidget {
     final isCorrect = useState(false);
     final validator = useState('');
     final answerNumber = useState('');
-    final answerDegree = useState('');
-    final answerType = useState(-1);
+    final answerDegreeType = useState(-1);
+    final bool isiPad = MediaQuery.of(context).size.width >= 560;
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/');
-                    },
-                    child: Text('戻る'),
-                  ),
-                  if (questionNumberState.value != 1)
-                    Text(
-                      isCorrect.value ? '正解！' : '残念！',
-                      style: appTextStyle(
-                        color: isCorrect.value ? Colors.red : Colors.blue,
-                      ),
-                    ),
-                  ElevatedButton(
-                    onPressed: () => _showTerms(context),
-                    child: Text('条件'),
-                  ),
-                ],
-              ),
-              (isResult.value)
-                  ? Column(
-                      children: [
-                        Text('終了！'),
-                        Text('最終スコア：${scoreState.value}'),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Text('${questionNumberState.value}問目'),
-                        Text('得点：${scoreState.value}/100'),
-                      ],
-                    ),
-              SizedBox(height: 32),
-              BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => questionNumberState.value == 11
-                    ? Text('')
-                    : Text(
-                        question.sentence,
-                        style: appTextStyle(),
-                      ),
-              ),
-              Text(
-                validator.value,
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-              isResult.value
-                  ? SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
+      body: BlocBuilder<QuestionBloc, Question>(
+        builder: (context, question) => SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: isiPad ? 64 : 16,
+              horizontal: isiPad ? 200 : 24,
+            ),
+            child: Column(
+              children: [
+                // 上の部分
+                SizedBox(
+                  height: isiPad ? 96 : 48,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
                         onPressed: () {
-                          isResult.value = false;
-                          questionNumberState.value = 1;
-                          scoreState.value = 0;
+                          Navigator.pushNamed(context, '/');
                         },
-                        child: Text('再チャレンジ'),
+                        child: Text(
+                          '戻る',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                          ),
+                        ),
                       ),
-                    )
-                  : Text(
-                      answerNumber.value + answerDegree.value,
+                      if (questionNumberState.value != 1)
+                        Text(
+                          isCorrect.value ? '正解！' : '残念！',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                            color: isCorrect.value ? Colors.red : Colors.blue,
+                          ),
+                        ),
+                      ElevatedButton(
+                        onPressed: () => _showCondition(context),
+                        child: Text(
+                          '条件',
+                          style: appTextStyle(
+                            isiPad: isiPad,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // 中段
+                Text(
+                  isResult.value
+                      ? '終了！\n最終スコア：${scoreState.value}'
+                      : '${questionNumberState.value}問目\n得点：${scoreState.value}/100',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: isiPad ? 24 : 12),
+                ),
+                SizedBox(height: 32),
+                // 問題文
+                SizedBox(
+                  height: isiPad ? 108 : 54,
+                  child: isResult.value
+                      ? ElevatedButton(
+                          onPressed: () {
+                            isResult.value = false;
+                            questionNumberState.value = 1;
+                            scoreState.value = 0;
+                          },
+                          child: Text(
+                            '再チャレンジ',
+                            style: appTextStyle(isiPad: isiPad),
+                          ),
+                        )
+                      : Text(
+                          questionNumberState.value == 11
+                              ? ''
+                              : question.sentence,
+                          style: appTextStyle(isiPad: isiPad),
+                        ),
+                ),
+                // バリデーションメッセージ
+                SizedBox(
+                  height: isiPad ? 36 : 18,
+                  child: Text(validator.value,
                       style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w500),
-                    ),
-              SizedBox(height: 32),
-              BlocBuilder<QuestionBloc, Question>(
-                builder: (context, question) => Expanded(
+                        fontSize: isiPad ? 28 : 12,
+                        color: Colors.red,
+                      )),
+                ),
+                // 回答
+                Text(
+                  answerNumber.value + _getDegreeName(answerDegreeType.value),
+                  style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 32),
+                // ボタン部分
+                Expanded(
                   child: GridView.count(
                     physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal:
-                          (MediaQuery.of(context).size.width < 480) ? 24 : 256,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     crossAxisCount: 4,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
-                    children: [
-                      '1',
-                      '2',
-                      '3',
-                      '4',
-                      '5',
-                      '6',
-                      '7',
-                      '8',
-                      '9',
-                      '.',
-                      '0',
-                      ' ×10^',
-                      'mol',
-                      'g',
-                      'L',
-                      '個',
-                      'C',
-                      'Enter',
-                    ].asMap().entries.map((entry) {
+                    children: buttonList.asMap().entries.map((entry) {
                       return ElevatedButton(
                         onPressed: () {
-                          switch (entry.key) {
-                            case 16: // clear
-                              answerNumber.value = '';
-                              answerDegree.value = '';
-                              break;
-                            case 17: // Enter
-                              if (answerNumber.value.isEmpty) {
-                                validator.value = '数値を入力してください。';
-                                return;
-                              }
-                              if (answerDegree.value.isEmpty) {
-                                validator.value = '単位を入力してください。';
-                                return;
-                              }
+                          // 数字ボタン
+                          if (_isNumberKey(entry.key)) {
+                            if (answerNumber.value.length >= 10) {
+                              validator.value = '数値は10文字以内で入力してください。';
+                              return;
+                            }
+                            answerNumber.value += entry.value;
+                          }
+                          // 単位ボタン
+                          if (_isDegreeKey(entry.key)) {
+                            answerDegreeType.value = entry.key - 12;
+                          }
+                          // Clearボタン
+                          if (_isClearKey(entry.key)) {
+                            answerNumber.value = '';
+                            answerDegreeType.value = -1;
+                          }
+                          // Enterボタン
+                          if (_isEnterKey(entry.key)) {
+                            validator.value = _validator(
+                              numberStr: answerNumber.value,
+                              degreeType: answerDegreeType.value,
+                            );
+                            if (validator.value.isNotEmpty) {
+                              return;
+                            }
 
-                              // 出題数集計
-                              if (questionNumberState.value > 10) {
-                                return;
-                              } else if (questionNumberState.value == 10) {
-                                questionNumberState.value++;
-                                isResult.value = true;
-                              } else {
-                                questionNumberState.value++;
-                              }
+                            // 出題数集計
+                            if (questionNumberState.value > 10) {
+                              return;
+                            } else if (questionNumberState.value == 10) {
+                              questionNumberState.value++;
+                              isResult.value = true;
+                            } else {
+                              questionNumberState.value++;
+                            }
 
-                              // 答え合わせ
-                              // 1.単位 2.数値
-                              if (answerType.value ==
-                                      question.desiredDegree.type &&
-                                  answerNumber.value.rate(question) ==
-                                      question.givenRate) {
-                                isCorrect.value = true;
-                                scoreState.value += 10;
-                              } else {
-                                isCorrect.value = false;
-                              }
-                              // テキストクリア
-                              answerNumber.value = '';
-                              answerDegree.value = '';
-                              validator.value = '';
-                              // 次の問題を出す
-                              context
-                                  .read<QuestionBloc>()
-                                  .add(QuestionChanged());
-
-                              break;
-                            case 12: // mol
-                            case 13: // g
-                            case 14: // L
-                            case 15: // 個
-                              answerDegree.value = entry.value;
-                              answerType.value = entry.key - 12; // 0,1,2,3
-                              break;
-                            default:
-                              // 答えが長すぎたらそれ以上入力できない
-                              if (answerNumber.value.length >= 10) {
-                                validator.value = '数値は10文字以内で入力してください。';
-                                return;
-                              }
-                              answerNumber.value += entry.value;
-                              break;
+                            // 答え合わせ
+                            // 1.単位 2.数値
+                            if (answerDegreeType.value ==
+                                    question.desiredDegree.type &&
+                                answerNumber.value.rate(question) ==
+                                    question.givenRate) {
+                              isCorrect.value = true;
+                              scoreState.value += 10;
+                            } else {
+                              isCorrect.value = false;
+                            }
+                            // テキストクリア
+                            answerNumber.value = '';
+                            answerDegreeType.value = -1;
+                            validator.value = '';
+                            // 次の問題を出す
+                            context.read<QuestionBloc>().add(QuestionChanged());
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: (entry.key <= 11)
+                          padding: EdgeInsets.all(0),
+                          primary: _isNumberKey(entry.key)
                               ? Colors.blue
-                              : (entry.key <= 15)
+                              : _isDegreeKey(entry.key)
                                   ? Colors.green
                                   : Colors.amber,
                         ),
-                        child: Text(entry.value),
+                        child: Text(
+                          entry.value,
+                          style: appTextStyle(isiPad: isiPad),
+                        ),
                       );
                     }).toList(),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _showTerms(BuildContext context) async {
+  void _showCondition(BuildContext context) async {
     await showDialog(
       context: context,
       builder: (context) {
-        String text = '';
-        text += '・アボガドロ定数は\n';
-        text += '6.0 ✖︎ 10 ^ 23とする。\n';
-        text += '・気体は理想気体とする。\n';
-        text += '・標準状態とする。\n';
-        text += '・原子量は以下の通り。\n\n';
-        text += 'H = 1\n';
-        text += 'C = 12\n';
-        text += 'N = 14\n';
-        text += 'O = 16\n';
-        text += 'Na = 23\n';
-        text += 'Mg = 24\n';
-        text += 'Al = 27\n';
-        text += 'S = 32\n';
-        text += 'Ca = 40\n';
         return AlertDialog(
           title: Text('＜条件＞'),
-          content: Text(text),
+          content: Text(conditionText),
           actions: [
             ElevatedButton(
               child: const Text('プレイ画面に戻る'),
@@ -267,5 +248,82 @@ class GameView extends HookWidget {
         );
       },
     );
+  }
+
+  bool _isNumberKey(int key) {
+    return (0 <= key && key <= 11);
+  }
+
+  bool _isDegreeKey(int key) {
+    return (12 <= key && key <= 15);
+  }
+
+  bool _isClearKey(int key) {
+    return (key == 16);
+  }
+
+  bool _isEnterKey(int key) {
+    return (key == 17);
+  }
+
+  String _getDegreeName(int type) {
+    if (type == 0) {
+      return 'mol';
+    } else if (type == 1) {
+      return 'g';
+    } else if (type == 2) {
+      return 'L';
+    } else if (type == 3) {
+      return '個';
+    } else {
+      return '';
+    }
+  }
+
+  String _validator({
+    required String numberStr,
+    required int degreeType,
+  }) {
+    if (numberStr.isEmpty) {
+      return '数値を入力してください。';
+    }
+    if (degreeType == -1) {
+      return '単位を入力してください。';
+    }
+
+    // 数値文字列の最初は必ず数値である
+    if (!RegExp(r'(\d+)').hasMatch(numberStr[0])) {
+      return '数値を正しく入力してください。1';
+    }
+
+    // 「.」は２回以上使用できない
+    if (RegExp(r"\.").allMatches(numberStr).length >= 2) {
+      return '「.」は２回以上使用できません。';
+    }
+
+    // 指数は２回以上使用できない
+    if (RegExp(r"×").allMatches(numberStr).length >= 2) {
+      return '指数は２回以上使用できません。';
+    }
+
+    int dotIndex = RegExp(r"\.").firstMatch(numberStr)?.start ?? -1;
+    int crossIndex = RegExp(r"\×").firstMatch(numberStr)?.start ?? -1;
+
+    // 「.」を含む場合、前後に必ず数字がある
+    if (dotIndex > -1 && !RegExp(r'(\d+)\.(\d+)').hasMatch(numberStr)) {
+      return '数値を正しく入力してください。２';
+    }
+
+    // 「.」は「×」の後ろにきてはいけない
+    if (dotIndex > -1 && crossIndex > -1 && dotIndex > crossIndex) {
+      return '指数は正の整数を指定してください。';
+    }
+
+    // 指数は必ず数値が必要
+    if (crossIndex > -1 && !RegExp(r'\^(\d+)').hasMatch(numberStr)) {
+      return '指数を指定してください。';
+    }
+
+    return '';
   }
 }
