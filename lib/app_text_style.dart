@@ -6,7 +6,7 @@ TextStyle appTextStyle({
   Color? color,
 }) {
   return TextStyle(
-    fontSize: isiPad ? 36 : fontSize,
+    fontSize: isiPad ? 28 : fontSize,
     fontWeight: FontWeight.bold,
     color: color,
   );

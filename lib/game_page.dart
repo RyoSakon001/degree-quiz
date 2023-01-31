@@ -51,7 +51,7 @@ class GameView extends HookWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(
               vertical: isiPad ? 64 : 16,
-              horizontal: isiPad ? 200 : 24,
+              horizontal: isiPad ? 180 : 24,
             ),
             child: Column(
               children: [
