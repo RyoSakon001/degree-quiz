@@ -12,7 +12,7 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
       : super(Question(
           substance: Substance(
             id: 0,
-            formula: '',
+            formula: 'H2O',
             amount: 1,
             commonName: '',
           ),
@@ -29,7 +29,6 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
             degree: '',
             baseValue: 1,
           ),
-          answer: '1mol',
         )) {
     on<QuestionChanged>((_, emit) async {
       final substanceData = await FirestoreProvider().getRandomSubstance();
@@ -60,7 +59,6 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
           degree: desiredDegreeData['degree'],
           baseValue: desiredDegreeData['baseValue'],
         ),
-        answer: '1mol',
       ));
     });
   }

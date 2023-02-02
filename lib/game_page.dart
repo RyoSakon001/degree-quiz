@@ -1,8 +1,6 @@
 import 'package:degree_quiz/app_text_style.dart';
-import 'package:degree_quiz/bloc/degree/degree_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_bloc.dart';
 import 'package:degree_quiz/bloc/question/question_event.dart';
-import 'package:degree_quiz/bloc/substance/substance_bloc.dart';
 import 'package:degree_quiz/constants.dart';
 import 'package:degree_quiz/model/question.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +15,6 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => SubstanceBloc()),
-        BlocProvider(create: (_) => DegreeBloc()),
         BlocProvider(create: (_) => QuestionBloc()),
       ],
       child: const GameView(),
@@ -116,11 +112,9 @@ class GameView extends HookWidget {
                             style: appTextStyle(isiPad: isiPad),
                           ),
                         )
-                      : Text(
-                          questionNumberState.value == 11
-                              ? ''
-                              : question.sentence,
-                          style: appTextStyle(isiPad: isiPad),
+                      : RichText(
+                          text: TextSpan(
+                              children: question.sentenceSpans(isiPad)),
                         ),
                 ),
                 // バリデーションメッセージ
