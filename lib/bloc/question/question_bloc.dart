@@ -12,7 +12,7 @@ class QuestionBloc extends Bloc<QuestionEvent, Question> {
       : super(Question(
           substance: Substance(
             id: 0,
-            formula: '',
+            formula: 'H2O',
             amount: 1,
             commonName: '',
           ),

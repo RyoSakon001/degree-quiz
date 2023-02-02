@@ -116,11 +116,9 @@ class GameView extends HookWidget {
                             style: appTextStyle(isiPad: isiPad),
                           ),
                         )
-                      : Text(
-                          questionNumberState.value == 11
-                              ? ''
-                              : question.sentence,
-                          style: appTextStyle(isiPad: isiPad),
+                      : RichText(
+                          text: TextSpan(
+                              children: question.sentenceSpans(isiPad)),
                         ),
                 ),
                 // バリデーションメッセージ

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:degree_quiz/app_text_style.dart';
 import 'package:degree_quiz/model/degree.dart';
 import 'package:degree_quiz/model/substance.dart';
 import 'package:degree_quiz/string_extension.dart';
@@ -16,18 +18,24 @@ class Question {
 }
 
 extension QuestionExtention on Question {
-  String get sentence {
-    String val = '';
-
-    val += _getAmountStr();
-    val += givenDegree.degree;
-    val += 'の';
-    val += substance.commonName;
-    val += substance.formula;
-    val += 'の';
-    val += desiredDegree.name;
-    val += 'を求めよ。';
-    return val;
+  List<TextSpan> sentenceSpans(bool isiPad) {
+    return <TextSpan>[
+      TextSpan(
+        text: '${_getAmountStr()}${givenDegree.degree}の${substance.commonName}',
+        style: appTextStyle(
+          isiPad: isiPad,
+          color: Colors.black,
+        ),
+      ),
+      ...formulaTextSpans,
+      TextSpan(
+        text: 'の${desiredDegree.name}を求めよ。',
+        style: appTextStyle(
+          isiPad: isiPad,
+          color: Colors.black,
+        ),
+      ),
+    ];
   }
 
   String _getAmountStr() {
@@ -60,5 +68,39 @@ extension QuestionExtention on Question {
     }
 
     return val;
+  }
+
+  List<TextSpan> get formulaTextSpans {
+    String formula = substance.formula;
+    // アルファベットと数値以外を削除
+    formula.replaceAll(RegExp(r'[^A-Za-z\d]'), '');
+
+    List<String> textList = [];
+    String tmp = "";
+
+    // 文字列のかたまりと数字に分割し、List化する
+    bool isDigit = formula[0].contains(RegExp(r'\d'));
+    for (int i = 0; i < formula.length; i++) {
+      if (formula[i].contains(RegExp(r'\d')) != isDigit) {
+        textList.add(tmp);
+        tmp = "";
+        isDigit = !isDigit;
+      }
+      tmp += formula[i];
+    }
+    textList.add(tmp);
+
+    // 数字だったら小さい文字にする
+    List<TextSpan> textSpans = [];
+    for (String item in textList) {
+      textSpans.add(TextSpan(
+          text: item,
+          style: TextStyle(
+            fontSize: item.contains(RegExp(r'\d')) ? 10 : 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          )));
+    }
+    return textSpans;
   }
 }
