@@ -96,7 +96,7 @@ extension QuestionExtention on Question {
       textSpans.add(TextSpan(
           text: item,
           style: TextStyle(
-            fontSize: item.contains(RegExp(r'\d')) ? 10 : 18,
+            fontSize: item.contains(RegExp(r'\d')) ? 14 : 18,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           )));
