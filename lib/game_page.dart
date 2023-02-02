@@ -185,23 +185,34 @@ class GameView extends HookWidget {
 
                             // 答え合わせ
                             // 1.単位 2.数値
-                            if (answerDegreeType.value ==
-                                    question.desiredDegree.type &&
-                                answerNumber.value.rate(question) ==
-                                    question.givenRate) {
+                            final bool isCorrectAnswer =
+                                answerDegreeType.value ==
+                                        question.desiredDegree.type &&
+                                    answerNumber.value.rate(question) ==
+                                        question.givenRate;
+                            if (isCorrectAnswer) {
                               isCorrect.value = true;
                               scoreState.value += 10;
+                              // テキストクリア
+                              answerNumber.value = '';
+                              answerDegreeType.value = -1;
+                              validator.value = '';
                             } else {
                               isCorrect.value = false;
-                              _showCorrectAnswer(context, question);
+                              _showCorrectAnswer(
+                                context,
+                                question,
+                                onPressed: () {
+                                  // テキストクリア
+                                  answerNumber.value = '';
+                                  answerDegreeType.value = -1;
+                                  validator.value = '';
+                                  context
+                                      .read<QuestionBloc>()
+                                      .add(QuestionChanged());
+                                },
+                              );
                             }
-
-                            // テキストクリア
-                            answerNumber.value = '';
-                            answerDegreeType.value = -1;
-                            validator.value = '';
-                            // 次の問題を出す
-                            context.read<QuestionBloc>().add(QuestionChanged());
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -246,7 +257,8 @@ class GameView extends HookWidget {
     );
   }
 
-  void _showCorrectAnswer(BuildContext context, Question question) async {
+  void _showCorrectAnswer(BuildContext context, Question question,
+      {required VoidCallback onPressed}) async {
     await showDialog(
       context: context,
       builder: (context) {
@@ -256,7 +268,11 @@ class GameView extends HookWidget {
           actions: [
             ElevatedButton(
                 child: const Text('次の問題へ'),
-                onPressed: () => Navigator.pop(context)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  // 次の問題を出す
+                  onPressed();
+                })
           ],
         );
       },
