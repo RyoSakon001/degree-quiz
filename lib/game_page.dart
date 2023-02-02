@@ -193,7 +193,9 @@ class GameView extends HookWidget {
                               scoreState.value += 10;
                             } else {
                               isCorrect.value = false;
+                              _showCorrectAnswer(context, question);
                             }
+
                             // テキストクリア
                             answerNumber.value = '';
                             answerDegreeType.value = -1;
@@ -238,6 +240,23 @@ class GameView extends HookWidget {
               child: const Text('プレイ画面に戻る'),
               onPressed: () => Navigator.pop(context),
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showCorrectAnswer(BuildContext context, Question question) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('残念！正解は...'),
+          content: Text(question.correctAnswerText),
+          actions: [
+            ElevatedButton(
+                child: const Text('次の問題へ'),
+                onPressed: () => Navigator.pop(context)),
           ],
         );
       },

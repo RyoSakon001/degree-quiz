@@ -21,7 +21,8 @@ extension QuestionExtention on Question {
   List<TextSpan> sentenceSpans(bool isiPad) {
     return <TextSpan>[
       TextSpan(
-        text: '${_getAmountStr()}${givenDegree.degree}の${substance.commonName}',
+        text:
+            '${amountStr(choice: true)}${givenDegree.degree}の${substance.commonName}',
         style: appTextStyle(
           isiPad: isiPad,
           color: Colors.black,
@@ -38,14 +39,15 @@ extension QuestionExtention on Question {
     ];
   }
 
-  String _getAmountStr() {
-    num amount = (givenDegree.type == 1) // g
+  String amountStr({required bool choice}) {
+    Degree choicedDegree = choice ? givenDegree : desiredDegree;
+    num amount = (choicedDegree.type == 1) // g
         ? substance.amount
-        : givenDegree.baseValue;
+        : choicedDegree.baseValue;
     amount *= givenRate;
 
     String val = '';
-    switch (givenDegree.type) {
+    switch (choicedDegree.type) {
       case 0: // mol
         if (amount >= 10) val = amount.round().toString();
         val = amount.toString();
@@ -102,5 +104,9 @@ extension QuestionExtention on Question {
           )));
     }
     return textSpans;
+  }
+
+  String get correctAnswerText {
+    return '${amountStr(choice: false)}${desiredDegree.degree}でした！';
   }
 }
