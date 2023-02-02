@@ -8,13 +8,11 @@ class Question {
     required this.substance,
     required this.givenDegree,
     required this.desiredDegree,
-    required this.answer,
   });
   final double givenRate;
   final Substance substance;
   final Degree givenDegree;
   final Degree desiredDegree;
-  final String answer;
 }
 
 extension QuestionExtention on Question {
